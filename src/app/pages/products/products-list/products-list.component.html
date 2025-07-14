@@ -8,7 +8,7 @@
   <!-- Contenido cuando no está cargando -->
   <div *ngIf="!loading">
     <div *ngIf="filteredProducts.length === 0" class="empty-list">
-      No se encontraron productos
+      No se encontraron productos!
       <!-- Este div interno se muestra solo si hay un término de búsqueda -->
       <div *ngIf="searchTerm">para "{{ searchTerm }}"</div>
     </div>
