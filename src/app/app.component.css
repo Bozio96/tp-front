@@ -1,8 +1,12 @@
 .main-content {
-  margin-left: 250px;
-  transition: margin-left 0.3s;
+  margin-left: 200px; /* Margen para el sidebar expandido */
+  transition: margin-left 0.3s ease; /* Transición suave para el margen */
+  box-sizing: border-box; 
+  padding: 0;
 }
 
-.sidebar.collapsed + .main-content {
-  margin-left: 60px;
+.main-content-expanded {
+  margin-left: 60px; /* Nuevo margen para dejar espacio al sidebar colapsado */
+  
 }
+

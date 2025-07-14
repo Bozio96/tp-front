@@ -1,0 +1,23 @@
+.container-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px); /* Ajusta si tienes un header o footer */
+  text-align: center;
+  color: #333;
+}
+
+.container-404 h1 {
+  font-size: 8em;
+  margin: 0;
+  color: #e74c3c;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+
+.container-404 p {
+  font-size: 1.5em;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+

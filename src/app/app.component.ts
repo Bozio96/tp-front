@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {CommonModule} from '@angular/common'
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import {SidebarComponent} from './components/sidebar/sidebar.component'
 
 @Component({
@@ -10,6 +10,18 @@ import {SidebarComponent} from './components/sidebar/sidebar.component'
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
-  title = 'Front';
+  isSidebarCollapsed: boolean = false; 
+
+  constructor(public router: Router) {
+    this.router.events.subscribe(event => {
+  
+    });
+  }
+
+  
+  onSidebarCollapsedChange(isCollapsed: boolean) {
+    this.isSidebarCollapsed = isCollapsed;
+  }
 }

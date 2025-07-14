@@ -1,0 +1,74 @@
+.product-header h1 {
+  color: white;
+}
+
+.product-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background-color: #510472;
+  border-bottom: 1px solid #250134;
+  margin-bottom: 30px; /* Espacio debajo del encabezado*/
+}
+
+.product-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  color: #8f2c2c;
+}
+
+.count-badge {
+  background-color: #250134;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: left; /* Mantener a la izquierda */
+  margin: 0px 0 30px 0;
+  padding: 1px 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/* Contenedor del input y el ícono */
+.input-wrapper {
+  position: relative; /* ¡MUY IMPORTANTE! La lupa se posiciona aquí */
+  width: 50%; /* Mantener al 50% como solicitaste, es el ancho visible de la barra de búsqueda */
+ box-sizing: border-box;
+}
+
+.search-input {
+  width: 100%; /* ¡IMPORTANTE! El input debe ocupar el 100% de su input-wrapper */
+  /* Ajustar el padding-right: ancho del icono (25px) + margen deseado (ej. 10px) = 35px */
+  padding: 12px 40px 12px 15px; /* Aquí establecemos el espacio para la lupa */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1.1em;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.search-input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(37, 1, 52, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  /* Posicionamos la lupa en píxeles fijos desde el borde derecho del input-wrapper */
+  right: 10px; 
+  top: 50%;
+  transform: translateY(-50%);
+  color: #000000;
+  height: 25px;
+  width: 25px;
+  pointer-events: none;
+}

@@ -1,0 +1,33 @@
+<div class="products-container">
+  <!-- Indicador de carga -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    Cargando productos...
+  </div>
+
+  <!-- Contenido cuando no está cargando -->
+  <div *ngIf="!loading">
+    <div *ngIf="filteredProducts.length === 0" class="empty-list">
+      No se encontraron productos
+      <!-- Este div interno se muestra solo si hay un término de búsqueda -->
+      <div *ngIf="searchTerm">para "{{ searchTerm }}"</div>
+    </div>
+
+  <table *ngIf="filteredProducts.length > 0" class="products-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Stock</th>
+          <th>Precio</th>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of filteredProducts">
+          <td>{{ product.id }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.stock }}</td>
+          <td>{{ product.price | currency:'$':'symbol':'1.2-2' }}</td>
+      </tbody>
+    </table>
+    </div>
+</div>
