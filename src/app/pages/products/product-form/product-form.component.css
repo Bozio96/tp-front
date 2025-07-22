@@ -1,0 +1,112 @@
+/* General container for the edit form */
+.edit-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  color: #2C3E50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #F39C12;
+  padding-bottom: 10px;
+}
+
+h3 {
+  color: #F39C12;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Form Grouping */
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+}
+
+textarea {
+  resize: vertical; /* Allows vertical resizing */
+  min-height: 80px;
+}
+
+input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+/* Inline and Grid Layouts for Form Groups */
+.form-group-inline {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Creates two columns, the second being twice as wide as the first */
+  gap: 20px;
+}
+
+.form-group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Creates a responsive grid with minimum item width of 200px */
+  gap: 20px;
+}
+
+/* Form Actions (Buttons) */
+.form-actions {
+  display: flex;
+  justify-content: flex-end; /* Aligns items to the end of the flex container */
+  gap: 10px;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s; /* Smooth transition for background color changes */
+}
+
+.save-btn {
+  background-color: #F39C12; /* Orange */
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #D35400; /* Darker orange on hover */
+}
+
+.cancel-btn {
+  background-color: #ccc; /* Light gray */
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background-color: #999; /* Darker gray on hover */
+}

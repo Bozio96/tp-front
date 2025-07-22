@@ -1,0 +1,19 @@
+<div class="toolbar-container">
+  <div *ngIf="showSearch" class="search-wrapper">
+    <i class="fas fa-search search-icon"></i>
+    <input
+      type="text"
+      [ngModel]="searchTerm"
+      (ngModelChange)="onSearchChange($event)"
+      />
+    
+
+    
+  </div>
+
+  <div class="add-button-wrapper" *ngIf="showAddButton">
+    <button (click)="onAdd()">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+</div>

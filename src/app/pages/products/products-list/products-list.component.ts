@@ -1,77 +1,121 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, OnDestroy } from '@angular/core'; // Añade OnDestroy
+import { Component, Input, OnChanges, OnInit, SimpleChanges, OnDestroy, HostListener, QueryList, ViewChildren, ElementRef } from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
-import { Subject, Subscription } from 'rxjs'; // Importa Subject y Subscription
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators'; // Importa operadores RxJS
-
-// Opcional: Define la interfaz Product si no la tienes globalmente
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  stock: number;
-  description?: string;
-}
+import { FormsModule } from '@angular/forms';   
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
+import { Product } from '../product.model';
+import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatTooltipModule,
+    DataToolbarComponent 
+  ],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.css']
 })
-export class ProductsListComponent implements OnInit, OnChanges, OnDestroy { // Implementa OnDestroy
+export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() searchTerm: string = '';
 
-  filteredProducts: Product[] = []; // Asegura el tipo Product[]
+  filteredProducts: Product[] = [];
   loading: boolean = true;
+  menuProductId: number | null = null;
 
-  private searchTerms = new Subject<string>(); // <-- Subject para manejar el Input searchTerm
-  private searchSubscription: Subscription | undefined; // <-- Para manejar la desuscripción
+  @ViewChildren('actionContainer') actionContainers!: QueryList<ElementRef>;
 
-  constructor(private productService: ProductService) {}
+  private searchTerms = new Subject<string>()
+  private searchSubscription: Subscription | undefined;
+
+  constructor(private productService: ProductService, private router: Router) {}
+
+  
 
   ngOnInit(): void {
-    // Suscribirse a los cambios del searchTerm con debounce
     this.searchSubscription = this.searchTerms.pipe(
-      debounceTime(300), // Espera 300ms después de la última entrada
-      distinctUntilChanged(), // Solo si el término es diferente al anterior
-      switchMap(term => { // Cancela la petición anterior si llega un nuevo término
-        this.loading = true; // Muestra el indicador de carga
-        return this.productService.searchProducts(term); // Llama al servicio de búsqueda
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term => {
+        this.loading = true;
+        return this.productService.searchProducts(term);
       })
     ).subscribe({
-      next: (products: Product[]) => { // Asegura el tipo Product[]
+      next: (products) => {
         this.filteredProducts = products;
-        this.loading = false; // Oculta el indicador de carga
-      },
-      error: (err: any) => {
-        console.error('Error al buscar productos', err);
         this.loading = false;
-        this.filteredProducts = []; // Vacía los resultados en caso de error
+      },
+      error: () => {
+        this.loading = false;
+        this.filteredProducts = [];
       }
     });
 
-    // Carga inicial de productos (vacío o todos si el searchTerm inicial está vacío)
-    this.searchTerms.next(this.searchTerm); // Dispara la búsqueda inicial con el searchTerm actual
+    this.searchTerms.next(this.searchTerm);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['searchTerm']) {
-      // Cuando el @Input() searchTerm cambia, lo emitimos al Subject
-      // Esto disparará el pipeline de debounce, distinctUntilChanged, switchMap
-      this.searchTerms.next(this.searchTerm);
-    }
+onSearchTermChanged(term: string): void {
+    this.searchTerm = term; // Opcional: actualiza el Input si lo necesitas para algo más.
+    this.searchTerms.next(term); // Emite el nuevo término al Subject
   }
 
-  // Es crucial desuscribirse para evitar fugas de memoria
+ngOnChanges(changes: SimpleChanges): void {
+  if (changes['searchTerm']) {
+    this.searchTerms.next(this.searchTerm);
+  }
+}
+  
+
   ngOnDestroy(): void {
     if (this.searchSubscription) {
       this.searchSubscription.unsubscribe();
     }
   }
 
-  // filterProducts y loadProducts privados ya no son necesarios en esta versión si usas searchTerms
-  // private loadProducts() { ... }
-  // private filterProducts() { ... }
+  toggleMenu(productId: number) {
+    this.menuProductId = this.menuProductId === productId ? null : productId;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (this.menuProductId !== null && this.actionContainers) {
+      const clickedInside = this.actionContainers.some(container =>
+        container.nativeElement.contains(event.target)
+      );
+
+      if (!clickedInside) {
+        this.menuProductId = null;
+      }
+    }
+  }
+
+  onEditClick(productId: number) {
+    this.menuProductId = null;
+    this.router.navigate(['/products/edit', productId]);
+  }
+
+  onDeleteClick(productId: number) {
+    this.menuProductId = null;
+
+    const confirmation = window.confirm('¿Estás seguro de que quieres eliminar este producto?');
+
+    if (confirmation) {
+      this.productService.deleteProduct(productId).subscribe(success => {
+        if (success) {
+          console.log('Producto eliminado con éxito.');
+          this.searchTerms.next(this.searchTerm);
+        } else {
+          console.error('No se pudo eliminar el producto.');
+        }
+      });
+    }
+  }
+  onAddClick(): void {
+  this.router.navigate(['/products/add']);
+}
 }
