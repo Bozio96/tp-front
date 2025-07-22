@@ -1,0 +1,58 @@
+/* src/app/pages/navegation-bar/navegation-bar.component.css */
+
+.top-nav {
+  background-color: #2c3e50;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center; /* Centra los botones horizontalmente */
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px; /* Espacio entre los botones */
+}
+
+/* --- ESTILOS CONSOLIDADOS PARA .nav-btn --- */
+.nav-btn {
+  background-color: transparent;
+  border: none;
+  color: #ecf0f1; /* Color de texto e icono por defecto (gris claro/blanco azulado) */
+  font-size: 1.1rem; /* Tamaño del texto del botón */
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 15px;
+  border-radius: 5px;
+  /* Transición para el color (texto/icono) y el fondo (si se añade uno en hover/active) */
+  transition: color 0.3s ease, background-color 0.3s ease;
+  display: flex; /* Para alinear el ícono y el texto */
+  align-items: center; /* Centra verticalmente el ícono y el texto */
+}
+
+/* --- ESTILOS DEL ÍCONO (Font Awesome) --- */
+.nav-icon {
+  font-size: 20px; /* Tamaño del icono Font Awesome (ajusta este valor) */
+  line-height: 1;  /* Ayuda a la alineación vertical */
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+  /* NO se necesitan width, height, fill, stroke para Font Awesome */
+}
+
+/* --- ESTILOS DE ESTADO ACTIVO (.nav-btn.active) --- */
+.nav-btn.active {
+  color: #F39C12; /* Color naranja para el botón activo */
+  
+}
+
+/* --- ESTILOS DE HOVER (.nav-btn:hover) --- */
+.nav-btn:hover {
+  color: #F39C12; /* Cambia el color del texto y, por ende, del Font Awesome Icon a naranja */
+  /* Puedes agregar un color de fondo ligero al hover si deseas */
+  /* background-color: rgba(255, 255, 255, 0.1); */
+}
+
+/* Para evitar que el botón activo cambie de color en hover si ya está naranja */
+.nav-btn.active:hover {
+    color: #F39C12; /* Mantiene el color naranja del activo, sin cambiar */
+    /* background-color: transparent; */ /* O el mismo background-color que el estado activo */
+}

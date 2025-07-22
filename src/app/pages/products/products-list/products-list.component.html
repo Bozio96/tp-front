@@ -1,5 +1,12 @@
+<app-data-toolbar
+  [searchTerm]="searchTerm"
+  (searchTermChange)="onSearchTermChanged($event)"
+  [showSearch]="true"
+  [showAddButton]="true"
+  [addLabel]="'Agregar Producto'"
+  (addClicked)="onAddClick()"
+></app-data-toolbar>
 <div class="products-container">
-  <!-- Indicador de carga -->
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
     Cargando productos...
@@ -12,22 +19,61 @@
       <!-- Este div interno se muestra solo si hay un término de búsqueda -->
       <div *ngIf="searchTerm">para "{{ searchTerm }}"</div>
     </div>
-
   <table *ngIf="filteredProducts.length > 0" class="products-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Stock</th>
-          <th>Precio</th>
-      </thead>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Stock</th>
+        <th>Precio</th>
+        <th></th> </tr>
+    </thead>
       <tbody>
         <tr *ngFor="let product of filteredProducts">
           <td>{{ product.id }}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.stock }}</td>
           <td>{{ product.price | currency:'$':'symbol':'1.2-2' }}</td>
-      </tbody>
-    </table>
-    </div>
+          <td class="action-cell">
+        <div class="action-container" #actionContainer> 
+          <button 
+            class="action-btn"
+            matTooltip="Acciones"                  
+            matTooltipPosition="after"             
+            matTooltipClass="tooltip-arrow"
+            (click)="toggleMenu(product.id)"
+          >
+            <svg 
+              class="action-icon" 
+              xmlns="http://www.w3.org/2000/svg" 
+              height="24px" 
+              viewBox="0 -960 960 960" 
+              width="24px" 
+              fill="currentColor">
+                <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
+            </svg>
+          </button>
+          
+          <div 
+              *ngIf="menuProductId === product.id"
+              class="action-dropdown-menu"
+            >
+              <button 
+                class="menu-option" 
+                (click)="onEditClick(product.id)"
+              >
+                Editar
+              </button>
+              <button 
+                class="menu-option delete-option"
+                (click)="onDeleteClick(product.id)"
+                >
+                  Eliminar
+                </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

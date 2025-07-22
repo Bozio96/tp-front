@@ -1,0 +1,63 @@
+.toolbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+  height: 45px;
+  padding: 0 1rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-wrapper {
+ flex-grow: 1;
+  max-width: 350px;
+  position: relative;
+}
+
+/* Ajusta el padding para hacer espacio para la lupa */
+.search-wrapper input[type="text"] {
+  width: 100%;
+  padding: 8px 12px 8px 36px; /* Aumenta el padding-left para el icono */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.search-wrapper input[type="text"]:focus {
+  border-color: #F39C12;
+  box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2);
+}
+
+/* Estilo para el ícono de lupa */
+.search-icon {
+  position: absolute;
+  left: 10px; /* Posiciona a la izquierda del input */
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none; /* Asegura que el icono no bloquee clicks en el input */
+  color: #999;
+  font-size: 16px; /* Tamaño de la lupa */
+}
+
+.add-button-wrapper button {
+  background-color: #F39C12;
+  color: white;
+  border: none;
+  padding: 8px; /* O puedes usar un padding uniforme */
+  border-radius: 50%; /* ¡Esto lo hace redondo! */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 40px; /* Ajusta el tamaño según tu preferencia */
+  height: 40px; /* Ajusta el tamaño según tu preferencia */
+
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+}
+
+.add-button-wrapper button:hover {
+  background-color: #D35400;
+}

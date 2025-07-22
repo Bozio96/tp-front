@@ -1,7 +1,7 @@
 
 .sidebar {
   width: 200px;
-  background-color: #250134;
+  background-color: #2C3E50;
   color: white;
   height: 100vh;
   display: flex;
@@ -33,12 +33,13 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
+  margin-top: 50px;
 }
 
 .menu button {
-  background: none;
+  background: none; 
   border: none;
-  color: white;
+  color: white; 
   text-align: left;
   font-size: 16px;
   cursor: pointer;
@@ -47,6 +48,7 @@
   gap: 10px;
 }
 
+
 /* Cambios clave para mostrar íconos colapsados */
 .menu button.collapsed {
   justify-content: center;
@@ -54,8 +56,18 @@
 }
 
 .menu button:hover {
-  background-color: #34495e;
+  color: #F39C12; 
+  background-color: transparent; /* Asegura que no haya un fondo, aunque la propiedad 'background: none' ya lo hace */
 }
+
+.menu button:hover .menu-icon {
+  fill: #F39C12; /* Y el color de relleno del ícono SVG */
+}
+
+.menu-icon {
+  fill: currentColor;
+}
+
 
 .bottom-section {
   padding: 1rem;
@@ -76,7 +88,7 @@
 }
 
 .profile-btn:hover {
-  color: #ffcc00;
+  color: #F39C12;;
 }
 
 .tooltip-arrow {

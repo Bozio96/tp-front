@@ -1,0 +1,101 @@
+<div class="edit-container">
+  <h2>{{ isEditing ? 'Editar Producto' : 'Agregar Nuevo Producto' }}</h2>
+
+  <form (ngSubmit)="onSave()" *ngIf="product">
+
+    <div class="section">
+      <h3>Datos del Producto</h3>
+      <div class="form-group-inline">
+        <div class="form-group">
+          <label for="id">ID</label>
+          <input id="id" type="text" [value]="product.id" disabled>
+        </div>
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input id="name" type="text" [(ngModel)]="product.name" name="name" required>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Datos Administrativos</h3>
+      <div class="form-group-grid">
+        <div class="form-group">
+          <label for="supplier">Proveedor</label>
+          <input id="supplier" type="text" [(ngModel)]="product.supplier" name="supplier">
+        </div>
+        <div class="form-group">
+          <label for="brand">Marca</label>
+          <input id="brand" type="text" [(ngModel)]="product.brand" name="brand">
+        </div>
+        <div class="form-group">
+          <label for="category">Rubro</label>
+          <input id="category" type="text" [(ngModel)]="product.category" name="category">
+        </div>
+        <div class="form-group">
+          <label for="department">Departamento</label>
+          <input id="department" type="text" [(ngModel)]="product.department" name="department">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Datos Impositivos y Costos</h3>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" [(ngModel)]="product.includeIVA" name="includeIVA">
+          Costo con IVA
+        </label>
+      </div>
+      <div class="form-group">
+        <label for="costBase">Costo Base</label>
+        <input id="costBase" type="number" [(ngModel)]="product.costBase" name="costBase" required>
+      </div>
+      <div class="form-group">
+        <label for="discounts">Descuentos</label>
+        <input id="discounts" type="number" [(ngModel)]="product.discounts" name="discounts">
+      </div>
+      <div class="form-group">
+        <label for="netCost">Costo Neto</label>
+        <input id="netCost" type="number" [value]="netCost | number:'1.2-2'" disabled>
+      </div>
+      <div class="form-group">
+        <label for="finalCost">Costo Final</label>
+        <input id="finalCost" type="number" [value]="finalCost | number:'1.2-2'" disabled>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Utilidad y Venta</h3>
+      <div class="form-group-grid">
+        <div class="form-group">
+          <label for="utility">Utilidad (%)</label>
+          <input id="utility" type="number" [(ngModel)]="product.utilityPercentage" name="utilityPercentage">
+        </div>
+        <div class="form-group">
+          <label for="salePrice">Precio de Venta</label>
+          <input id="salePrice" type="number" [value]="salePrice | number:'1.2-2'" disabled>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>Stock</h3>
+      <div class="form-group-grid">
+        <div class="form-group">
+          <label for="minStock">Stock Mínimo</label>
+          <input id="minStock" type="number" [(ngModel)]="product.minStock" name="minStock">
+        </div>
+        <div class="form-group">
+          <label for="actualStock">Stock Actual</label>
+          <input id="actualStock" type="number" [(ngModel)]="product.stock" name="stock">
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="save-btn">{{ isEditing ? 'Guardar Cambios' : 'Guardar' }}</button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">Cancelar</button>
+    </div>
+  </form>
+</div>
