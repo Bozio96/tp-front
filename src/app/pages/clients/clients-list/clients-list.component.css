@@ -1,0 +1,13 @@
+.clients-header {
+    background-color: red;
+    padding: 15px;
+}
+
+.search-bar{
+    background-color: blue;
+    margin: 10px;
+}
+
+.input-search{
+    background-color: yellow;
+}

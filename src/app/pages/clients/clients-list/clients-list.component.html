@@ -1,0 +1,47 @@
+<div class="clients-header">
+  <h1>CLIENTES</h1>
+</div>
+
+<!-- Barra de búsqueda -->
+<mat-form-field appearance="outline">
+  <mat-icon matSuffix> search</mat-icon>
+  <input matInput placeholder="Buscar clientes" >
+</mat-form-field>
+
+<!-- Tabla -->
+ <table mat-table [dataSource]= "data" class="mat-elevation-z8" >
+  <!-- Columna nombre -->
+  <ng-container matColumnDef="firstName">
+    <th mat-header-cell *matHeaderCellDef> Nombre</th>
+    <td mat-cell *matCellDef= "let client">{{client.firstName}}</td>
+  </ng-container>
+
+<!-- Columna apellido -->
+<ng-container matColumnDef="lastName">
+  <th mat-header-cell *matHeaderCellDef> Apellido </th>
+  <td mat-cell *matCellDef="let client">{{client.lastName}}</td>
+</ng-container>
+
+<!-- Columna DNI -->
+<ng-container matColumnDef="dni">
+  <th mat-header-cell *matHeaderCellDef> DNI </th>
+  <td mat-cell *matCellDef="let client">{{client.dni}}</td>
+</ng-container>
+
+<!-- Columna Teléfono -->
+<ng-container matColumnDef="tel">
+  <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+  <td mat-cell *matCellDef="let client">{{client.tel}}</td>
+</ng-container>
+
+<!-- Columna Email -->
+<ng-container matColumnDef="email">
+  <th mat-header-cell *matHeaderCellDef> Email </th>
+  <td mat-cell *matCellDef="let client">{{client.email}}</td>
+</ng-container>
+
+  <!-- Columnas -->
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <!-- Filas -->
+   <tr mat-row *matRowDef= "let row; columns: columns;"></tr>
+ </table>
