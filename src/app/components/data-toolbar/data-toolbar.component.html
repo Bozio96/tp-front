@@ -5,15 +5,13 @@
       type="text"
       [ngModel]="searchTerm"
       (ngModelChange)="onSearchChange($event)"
-      />
-    
-
-    
+    />
   </div>
 
-  <div class="add-button-wrapper" *ngIf="showAddButton">
-    <button (click)="onAdd()">
-      <i class="fas fa-plus"></i>
-    </button>
-  </div>
+<div class="add-button-wrapper" *ngIf="showAddButton">
+  <button (click)="onAdd()" 
+          matTooltip="Añadir" 
+          matTooltipPosition="after">
+    <i class="fas fa-plus"></i>
+  </button>
 </div>

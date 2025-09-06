@@ -1,23 +1,62 @@
 <nav class="top-nav">
   <div class="nav-links">
-    <button class="nav-btn active" (click)="onNavigate('/products')">
+    <a
+      class="nav-btn"
+      routerLink="/products"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <i class="fas fa-boxes-stacked nav-icon"></i>
       Articulos
-    </button>
+    </a>
 
-    <button class="nav-btn" (click)="onNavigate('/products/marca')">
+    <a
+      class="nav-btn"
+      routerLink="/products/brands"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <i class="fas fa-registered nav-icon"></i>
       Marcas
-    </button>
+    </a>
 
-    <button class="nav-btn" (click)="onNavigate('/products/departamento')">
+    <a
+      class="nav-btn"
+      routerLink="/products/departments"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <i class="fas fa-sitemap nav-icon"></i>
       Departamentos
-    </button>
+    </a>
 
-    <button class="nav-btn" (click)="onNavigate('/products/rubro')">
+    <a
+      class="nav-btn"
+      routerLink="/products/categories"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
       <i class="fas fa-folder nav-icon"></i>
-      Rubros
-    </button>
+      Categorias
+    </a>
+
+    <a
+      class="nav-btn"
+      routerLink="/products/suppliers"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-truck nav-icon"></i>
+      Proveedores
+    </a>
+     <a
+      class="nav-btn"
+      routerLink="/products/price-change"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-money-bill-wave nav-icon"></i>
+      Cambio de Precios
+    </a>
   </div>
 </nav>

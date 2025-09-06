@@ -6,9 +6,9 @@ import { CommonModule } from '@angular/common'; // <-- ¡Añade esta importació
   selector: 'app-home',
   standalone: true,
   imports: [CommonModule], // <-- ¡Añade CommonModule aquí!
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'] // Debería ser styleUrls si es un array, o styleUrl si es uno solo.
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.css'] // Debería ser styleUrls si es un array, o styleUrl si es uno solo.
 })
-export class HomeComponent {
+export class HomePageComponent {
 
 }

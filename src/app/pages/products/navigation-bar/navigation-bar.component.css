@@ -1,3 +1,17 @@
+/* Responsive: barra de navegación apilada en móvil */
+@media (max-width: 600px) {
+  .navigation-bar, nav {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 8px 0;
+  }
+  .navigation-bar button, .navigation-bar a {
+    width: 100%;
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+}
 /* src/app/pages/navegation-bar/navegation-bar.component.css */
 
 .top-nav {
@@ -28,31 +42,33 @@
   transition: color 0.3s ease, background-color 0.3s ease;
   display: flex; /* Para alinear el ícono y el texto */
   align-items: center; /* Centra verticalmente el ícono y el texto */
+  text-decoration: none;
 }
 
 /* --- ESTILOS DEL ÍCONO (Font Awesome) --- */
 .nav-icon {
   font-size: 20px; /* Tamaño del icono Font Awesome (ajusta este valor) */
-  line-height: 1;  /* Ayuda a la alineación vertical */
+  line-height: 1; /* Ayuda a la alineación vertical */
   margin-right: 8px; /* Espacio entre el ícono y el texto */
   /* NO se necesitan width, height, fill, stroke para Font Awesome */
 }
 
 /* --- ESTILOS DE ESTADO ACTIVO (.nav-btn.active) --- */
 .nav-btn.active {
-  color: #F39C12; /* Color naranja para el botón activo */
-  
+  color: #F39C12;
+  text-decoration: none; /* Color naranja para el botón activo */
 }
 
 /* --- ESTILOS DE HOVER (.nav-btn:hover) --- */
 .nav-btn:hover {
-  color: #F39C12; /* Cambia el color del texto y, por ende, del Font Awesome Icon a naranja */
+  color: #F39C12; 
+  text-decoration: none;/* Cambia el color del texto y, por ende, del Font Awesome Icon a naranja */
   /* Puedes agregar un color de fondo ligero al hover si deseas */
   /* background-color: rgba(255, 255, 255, 0.1); */
 }
 
 /* Para evitar que el botón activo cambie de color en hover si ya está naranja */
 .nav-btn.active:hover {
-    color: #F39C12; /* Mantiene el color naranja del activo, sin cambiar */
-    /* background-color: transparent; */ /* O el mismo background-color que el estado activo */
+  color: #F39C12; /* Mantiene el color naranja del activo, sin cambiar */
+  /* background-color: transparent; */ /* O el mismo background-color que el estado activo */
 }
