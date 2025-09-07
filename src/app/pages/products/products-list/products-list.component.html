@@ -3,7 +3,7 @@
     [searchTerm]="searchTerm"
     (searchTermChange)="onSearchTermChanged($event)"
     [showSearch]="true"
-    [showAddButton]="true"
+    [showAddButton]="authService.hasRole('admin')"
     [addLabel]="'Agregar Producto'"
     (addClicked)="onAddClick()"
   ></app-data-toolbar>
@@ -98,7 +98,7 @@ filter_alt
           <th>Nombre</th>
           <th>Stock</th>
           <th>Precio</th>
-          <th></th>
+                <th *ngIf="authService.hasRole('admin')"></th>
         </tr>
       </thead>
       <tbody>
@@ -107,7 +107,7 @@ filter_alt
           <td>{{ product.name }}</td>
           <td>{{ product.stock }}</td>
           <td>{{ product.price | currency : "$" : "symbol" : "1.2-2" }}</td>
-          <td class="action-cell">
+          <td class="action-cell" *ngIf="authService.hasRole('admin')">
             <div class="action-container" #actionContainer>
               <button
                 class="action-btn"

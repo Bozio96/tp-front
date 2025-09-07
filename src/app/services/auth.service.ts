@@ -10,7 +10,7 @@ export interface User {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
@@ -27,12 +27,12 @@ export class AuthService {
     return of(true).pipe(
       delay(1000),
       tap(() => {
-        if (username === 'admin' && password === 'P@ssw0rdAdm1n') {
+        if (username === 'admin' && password === '1234') {
           const user: User = { id: 1, username: 'admin', role: 'admin' };
           this.currentUserSubject.next(user);
           this.isLoggedInSubject.next(true);
           console.log('Login exitoso. Usuario:', user);
-        } else if (username === 'user' && password === 'P@ssw0rdUs3r') {
+        } else if (username === 'user' && password === '12345') {
           const user: User = { id: 2, username: 'user', role: 'user' };
           this.currentUserSubject.next(user);
           this.isLoggedInSubject.next(true);
@@ -53,6 +53,8 @@ export class AuthService {
     console.log('Logout exitoso.');
   }
 
+  
+
   // Los siguientes métodos ya no son necesarios, pero los dejo por compatibilidad
   isLoggedIn(): boolean {
     return this.isLoggedInSubject.value;
@@ -65,4 +67,9 @@ export class AuthService {
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
+   hasRole(role: 'admin' | 'user'): boolean {
+    const user = this.currentUserSubject.value;
+    return !!user && user.role === role;
+  }
 }
+

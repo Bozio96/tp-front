@@ -17,4 +17,4 @@ export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: R
   // Si no cumple el rol, redirige a una página de acceso denegado o a la página de inicio.
   router.navigate(['/']); // Redirige a la página de inicio.
   return false;
-};
+}; 

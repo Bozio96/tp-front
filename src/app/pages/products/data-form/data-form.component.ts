@@ -1,5 +1,4 @@
 import { HostListener, OnDestroy } from '@angular/core';
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -9,8 +8,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms'; // Importaciones para formularios reactivos
 import { ActivatedRoute, Router } from '@angular/router'; // Para obtener parámetros de ruta y navegar
-import {
-  ProductDataService} from '../../../services/product-data.service'; // Nuestro servicio de datos
+import { ProductDataService } from '../../../services/product-data.service'; // Nuestro servicio de datos
 import { DataItem, EntityType } from '../../../services/product-types';
 
 @Component({
@@ -50,7 +48,7 @@ export class DataFormComponent implements OnInit, OnDestroy {
     // 'id' es solo lectura en el formulario (o puede ser oculto)
     this.dataForm = this.fb.group({
       id: [{ value: '', disabled: true }], // El ID será deshabilitado para que el usuario no lo edite
-  name: ['', [Validators.required, Validators.minLength(1)]], // El nombre es requerido y mínimo 1 carácter
+      name: ['', [Validators.required, Validators.minLength(1)]], // El nombre es requerido y mínimo 1 carácter
     });
 
     // Suscribirse a los parámetros de la URL para determinar el tipo de entidad y el modo

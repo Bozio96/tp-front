@@ -50,7 +50,7 @@
       Proveedores
     </a>
      <a
-      class="nav-btn"
+      class="nav-btn " *ngIf="authService.hasRole('admin')"
       routerLink="/products/price-change"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"

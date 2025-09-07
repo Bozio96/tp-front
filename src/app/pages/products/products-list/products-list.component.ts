@@ -1,23 +1,7 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  OnDestroy,
-  HostListener,
-  QueryList,
-  ViewChildren,
-  ElementRef,
-} from '@angular/core';
+import {Component,Input,OnChanges,OnInit,SimpleChanges,OnDestroy,HostListener,QueryList,ViewChildren,ElementRef,} from '@angular/core';
 import { ProductService } from '../../../services/product.service';
 import { CommonModule } from '@angular/common';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-} from '@angular/forms'; // <-- Importaciones clave
+import {FormsModule,ReactiveFormsModule,FormBuilder,FormGroup,} from '@angular/forms'; // <-- Importaciones clave
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -26,17 +10,12 @@ import { Product } from '../product.model';
 import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 import {ProductDataService} from '../../../services/product-data.service'; // <-- Nuevo: para obtener los filtros
 import { DataItem } from '../../../services/product-types';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatTooltipModule,
-    DataToolbarComponent,
-    ReactiveFormsModule,
-  ],
+  imports: [CommonModule,FormsModule,MatTooltipModule,DataToolbarComponent,ReactiveFormsModule,],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.css'],
 })
@@ -66,7 +45,8 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
     private productService: ProductService,
     private router: Router,
     private fb: FormBuilder, // <-- Nuevo: FormBuilder para crear el formulario
-    private productDataService: ProductDataService // <-- Nuevo: para obtener los datos de filtro
+    private productDataService: ProductDataService,
+    public authService: AuthService // <-- Nuevo: para obtener los datos de filtro
   ) {}
 
   ngOnInit(): void {

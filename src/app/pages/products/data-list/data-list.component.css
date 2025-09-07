@@ -1,18 +1,3 @@
-/* Responsive: lista de proveedores apilada y scrolleable en móvil */
-@media (max-width: 600px) {
-  .suppliers-list, table {
-    width: 100%;
-    min-width: 400px;
-    display: block;
-    overflow-x: auto;
-  }
-  th, td {
-    padding: 8px 4px;
-    font-size: 15px;
-    white-space: nowrap;
-  }
-}
-/* Copia el CSS completo de brands-list.component.css aquí */
 .list-container {
   padding: 10px;
   background-color: #ffffff;
