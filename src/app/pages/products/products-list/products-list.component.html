@@ -88,7 +88,9 @@ filter_alt
   </div>
   <div *ngIf="!loading">
     <div *ngIf="filteredProducts.length === 0" class="empty-list">
+
       No se encontraron productos
+
       <div *ngIf="searchTerm">para "{{ searchTerm }}"</div>
     </div>
     <table *ngIf="filteredProducts.length > 0" class="products-table">
