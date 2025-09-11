@@ -1,0 +1,49 @@
+<div class="edit-container">
+  <h2>{{ formTitle }}</h2>
+
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    Cargando...
+  </div>
+
+  <form [formGroup]="dataForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+    <div class="section">
+      <h3>Datos del {{ entityType | titlecase }}</h3>
+      <div class="form-group-inline">
+        <div class="form-group">
+          <label for="id">ID</label>
+          <input id="id" type="text" formControlName="id" />
+        </div>
+        <div class="form-group">
+          <label for="name">Nombre</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            [class.is-invalid]="f['name'].invalid && f['name'].touched"
+          />
+          <div
+            *ngIf="f['name'].invalid && f['name'].touched"
+            class="invalid-feedback"
+          >
+            <div *ngIf="f['name'].errors?.['required']">
+              El nombre es requerido.
+            </div>
+            <div *ngIf="f['name'].errors?.['minlength']">
+              El nombre debe tener al menos 3 caracteres.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="save-btn" [disabled]="dataForm.invalid">
+        {{ isEditMode ? "Guardar Cambios" : "Guardar" }}
+      </button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        Cancelar
+      </button>
+    </div>
+  </form>
+</div>

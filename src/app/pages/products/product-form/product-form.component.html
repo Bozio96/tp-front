@@ -1,101 +1,242 @@
 <div class="edit-container">
-  <h2>{{ isEditing ? 'Editar Producto' : 'Agregar Nuevo Producto' }}</h2>
+  <h2>{{ isEditing ? "Editar Producto" : "Agregar Nuevo Producto" }}</h2>
 
-  <form (ngSubmit)="onSave()" *ngIf="product">
-
+  <form [formGroup]="productForm" (ngSubmit)="onSave()">
+    <!-- Datos del Producto -->
     <div class="section">
       <h3>Datos del Producto</h3>
       <div class="form-group-inline">
         <div class="form-group">
-          <label for="id">ID</label>
-          <input id="id" type="text" [value]="product.id" disabled>
+          <label for="sku">SKU</label>
+          <input id="sku" type="text" formControlName="sku" />
         </div>
         <div class="form-group">
           <label for="name">Nombre</label>
-          <input id="name" type="text" [(ngModel)]="product.name" name="name" required>
+          <input id="name" type="text" formControlName="name" />
         </div>
       </div>
     </div>
 
+    <!-- Datos Administrativos -->
     <div class="section">
       <h3>Datos Administrativos</h3>
       <div class="form-group-grid">
         <div class="form-group">
           <label for="supplier">Proveedor</label>
-          <input id="supplier" type="text" [(ngModel)]="product.supplier" name="supplier">
+          <input
+            id="supplier"
+            type="text"
+            formControlName="supplier"
+            list="supplier-options"
+          />
+          <datalist id="supplier-options">
+            <option
+              *ngFor="let supplier of availableSuppliers"
+              [value]="supplier.name"
+            ></option>
+          </datalist>
+          <div
+            *ngIf="
+              productForm.get('supplier')?.hasError('valueNotExists') &&
+              productForm.get('supplier')?.touched
+            "
+            class="error-message"
+          >
+            El proveedor ingresado no existe.
+          </div>
         </div>
+
         <div class="form-group">
           <label for="brand">Marca</label>
-          <input id="brand" type="text" [(ngModel)]="product.brand" name="brand">
+          <input
+            id="brand"
+            type="text"
+            formControlName="brand"
+            list="brand-options"
+          />
+          <datalist id="brand-options">
+            <option
+              *ngFor="let brand of availableBrands"
+              [value]="brand.name"
+            ></option>
+          </datalist>
+          <div
+            *ngIf="
+              productForm.get('brand')?.hasError('valueNotExists') &&
+              productForm.get('brand')?.touched
+            "
+            class="error-message"
+          >
+            La marca ingresada no existe.
+          </div>
         </div>
+
         <div class="form-group">
-          <label for="category">Rubro</label>
-          <input id="category" type="text" [(ngModel)]="product.category" name="category">
+          <label for="category">Categoría</label>
+          <input
+            id="category"
+            type="text"
+            formControlName="category"
+            list="category-options"
+          />
+          <datalist id="category-options">
+            <option
+              *ngFor="let category of availableCategories"
+              [value]="category.name"
+            ></option>
+          </datalist>
+          <div
+            *ngIf="
+              productForm.get('category')?.hasError('valueNotExists') &&
+              productForm.get('category')?.touched
+            "
+            class="error-message"
+          >
+            La categoría ingresada no existe.
+          </div>
         </div>
+
         <div class="form-group">
           <label for="department">Departamento</label>
-          <input id="department" type="text" [(ngModel)]="product.department" name="department">
+          <input
+            id="department"
+            type="text"
+            formControlName="department"
+            list="department-options"
+          />
+          <datalist id="department-options">
+            <option
+              *ngFor="let department of availableDepartments"
+              [value]="department.name"
+            ></option>
+          </datalist>
+          <div
+            *ngIf="
+              productForm.get('department')?.hasError('valueNotExists') &&
+              productForm.get('department')?.touched
+            "
+            class="error-message"
+          >
+            El departamento ingresado no existe.
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Datos Impositivos y Costos -->
     <div class="section">
       <h3>Datos Impositivos y Costos</h3>
+
       <div class="form-group">
         <label>
-          <input type="checkbox" [(ngModel)]="product.includeIVA" name="includeIVA">
-          Costo con IVA
+          <input type="checkbox" formControlName="includeIVA" />
+          Costo sin IVA
         </label>
       </div>
+
       <div class="form-group">
         <label for="costBase">Costo Base</label>
-        <input id="costBase" type="number" [(ngModel)]="product.costBase" name="costBase" required>
+        <input
+          id="costBase"
+          type="number"
+          formControlName="costBase"
+          step="any"
+          inputmode="decimal"
+        />
       </div>
+
       <div class="form-group">
         <label for="discounts">Descuentos</label>
-        <input id="discounts" type="number" [(ngModel)]="product.discounts" name="discounts">
+        <input
+          id="discounts"
+          type="number"
+          formControlName="discounts"
+          step="any"
+          inputmode="decimal"
+        />
       </div>
+
       <div class="form-group">
         <label for="netCost">Costo Neto</label>
-        <input id="netCost" type="number" [value]="netCost | number:'1.2-2'" disabled>
+        <input
+          id="netCost"
+          type="text"
+          [value]="netCost | number : '1.2-2'"
+          disabled
+        />
       </div>
+
       <div class="form-group">
         <label for="finalCost">Costo Final</label>
-        <input id="finalCost" type="number" [value]="finalCost | number:'1.2-2'" disabled>
+        <input
+          id="finalCost"
+          type="text"
+          [value]="finalCost | number : '1.2-2'"
+          disabled
+        />
       </div>
     </div>
 
+    <!-- Utilidad y Venta -->
     <div class="section">
       <h3>Utilidad y Venta</h3>
       <div class="form-group-grid">
         <div class="form-group">
           <label for="utility">Utilidad (%)</label>
-          <input id="utility" type="number" [(ngModel)]="product.utilityPercentage" name="utilityPercentage">
+          <input
+            id="utility"
+            type="number"
+            formControlName="utilityPercentage"
+            step="any"
+            inputmode="decimal"
+          />
         </div>
         <div class="form-group">
           <label for="salePrice">Precio de Venta</label>
-          <input id="salePrice" type="number" [value]="salePrice | number:'1.2-2'" disabled>
+          <input
+            id="salePrice"
+            type="number"
+            formControlName="salePrice"
+            step="any"
+            inputmode="decimal"
+          />
         </div>
       </div>
     </div>
 
+    <!-- Stock -->
     <div class="section">
       <h3>Stock</h3>
       <div class="form-group-grid">
         <div class="form-group">
           <label for="minStock">Stock Mínimo</label>
-          <input id="minStock" type="number" [(ngModel)]="product.minStock" name="minStock">
+          <input
+            id="minStock"
+            type="number"
+            formControlName="minStock"
+            step="1"
+          />
         </div>
         <div class="form-group">
           <label for="actualStock">Stock Actual</label>
-          <input id="actualStock" type="number" [(ngModel)]="product.stock" name="stock">
+          <input
+            id="actualStock"
+            type="number"
+            formControlName="stock"
+            step="1"
+          />
         </div>
       </div>
     </div>
 
+    <!-- Botones -->
     <div class="form-actions">
-      <button type="submit" class="save-btn">{{ isEditing ? 'Guardar Cambios' : 'Guardar' }}</button>
-      <button type="button" class="cancel-btn" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="save-btn" [disabled]="productForm.invalid">
+        {{ isEditing ? "Guardar Cambios" : "Guardar" }}
+      </button>
+      <button type="button" class="cancel-btn" (click)="onCancel()">
+        Cancelar
+      </button>
     </div>
   </form>
 </div>

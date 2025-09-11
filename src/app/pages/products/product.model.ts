@@ -1,3 +1,5 @@
+// product.model.ts
+
 export interface Product {
   id: number;
   name: string;
@@ -13,4 +15,10 @@ export interface Product {
   utilityPercentage: number;
   salePrice: number;
   minStock: number;
+  sku: string;
+
+  // Propiedades opcionales para el cambio de precios
+  costoNuevo?: number | null;
+  salePriceNuevo?: number | null;
+  utilityNuevo?: number | null;
 }

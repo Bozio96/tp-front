@@ -1,21 +1,20 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'; // Importa el servicio Router
+import { RouterModule } from '@angular/router'; // Importa el servicio Router
 import { CommonModule } from '@angular/common'; // Asegúrate de que esto está importado
+import { AuthService } from '../../../services/auth.service';
+ // Importa el AuthService
 
 @Component({
   selector: 'app-navigation-bar',
   standalone: true,
-  imports: [CommonModule], // Asegúrate de que los imports están correctos
+  imports: [CommonModule, RouterModule], // Asegúrate de que los imports están correctos
   templateUrl: './navigation-bar.component.html',
   styleUrls: ['./navigation-bar.component.css']
 })
 export class NavigationBarComponent {
 
-  // Inyecta el servicio Router en el constructor
-  constructor(private router: Router) { }
+  constructor(
+    public authService: AuthService // <-- Nuevo: para obtener los datos de filtro
+  ) {}
 
-  // Crea un método genérico para manejar la navegación
-  onNavigate(path: string): void {
-    this.router.navigate([path]);
-  }
 }

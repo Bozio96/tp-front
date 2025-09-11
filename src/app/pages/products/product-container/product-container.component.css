@@ -1,0 +1,8 @@
+/* Responsive: contenedor de productos apilado en móvil */
+@media (max-width: 600px) {
+	.product-container {
+		flex-direction: column;
+		gap: 12px;
+		padding: 8px;
+	}
+}

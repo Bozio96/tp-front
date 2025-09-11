@@ -1,0 +1,149 @@
+<!-- price-change.component.html -->
+<div class="price-change-container" [formGroup]="priceForm">
+  <h2>Cambio Masivo de Precios</h2>
+
+  <!-- Sección de entrada con previsualización -->
+  <div class="input-section">
+    <div class="input-group">
+      <label>
+        <input type="radio" formControlName="applyTo" value="cost">
+        Aplicar al costo
+      </label>
+      <label>
+        <input type="radio" formControlName="applyTo" value="salePrice">
+        Aplicar al precio de venta
+      </label>
+    </div>
+
+
+    <!-- Inputs con validación -->
+    <div class="input-row">
+      <div class="input-field">
+        <label>Porcentaje de aumento (%)</label>
+        <input 
+          type="number" 
+          step="0.01" 
+          min="0" 
+          max="1000"
+          formControlName="percentage"
+          placeholder="Ej: 10">
+      </div>
+
+      <div class="or-divider">ó</div>
+
+      <div class="input-field">
+        <label>Nueva utilidad (%)</label>
+        <input 
+          type="number" 
+          step="0.01" 
+          min="0" 
+          max="1000"
+          formControlName="utility"
+          placeholder="Ej: 150">
+      </div>
+
+      <button
+        class="btn-filter"
+        [disabled]="!canFilter"
+        (click)="toggleFilter()"
+      >
+        Filtrar
+      </button>
+    </div>
+  </div>
+
+  <!-- Filtro desplegable -->
+  <div class="filter-panel" *ngIf="showFilter">
+    <h3>Filtrar Productos</h3>
+    <form [formGroup]="filterForm">
+      <div class="filter-grid">
+        <div class="filter-group">
+          <label>Proveedor</label>
+          <select formControlName="supplier" (change)="applyFilter()">
+            <option value="">Todos</option>
+            <option *ngFor="let s of suppliers" [value]="s.name">{{ s.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Marca</label>
+          <select formControlName="brand" (change)="applyFilter()">
+            <option value="">Todas</option>
+            <option *ngFor="let b of brands" [value]="b.name">{{ b.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Departamento</label>
+          <select formControlName="department" (change)="applyFilter()">
+            <option value="">Todos</option>
+            <option *ngFor="let d of departments" [value]="d.name">{{ d.name }}</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Categoría</label>
+          <select formControlName="category" (change)="applyFilter()">
+            <option value="">Todas</option>
+            <option *ngFor="let c of categories" [value]="c.name">{{ c.name }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-actions">
+        <button type="button" class="btn-clear" (click)="clearFilter()">Limpiar</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Listado de productos -->
+  <div class="products-list" *ngIf="filteredProducts.length > 0; else noProducts">
+    <h3>Productos Filtrados ({{ filteredProducts.length }})</h3>
+
+    <table class="data-table" [class.calculating]="isCalculating">
+      <thead>
+        <tr>
+          <th>sku</th>
+          <th>Nombre</th>
+          <th>Costo</th>
+          <th>Utilidad (%)</th>
+          <th>Precio Venta</th>
+          <th>Costo Nuevo</th>
+          <th>Utilidad Nueva (%)</th>
+          <th>Precio Nuevo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filteredProducts">
+          <td>{{ p.sku }}</td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.costBase | number:'1.2-2' }}</td>
+          <td>{{ p.utilityPercentage | number:'1.2-2' }}</td>
+          <td>{{ p.salePrice | currency:'$':'symbol':'1.2-2' }}</td>
+          <td><strong>{{ p.costoNuevo ? (p.costoNuevo | number:'1.2-2') : '-' }}</strong></td>
+          <td><strong>{{ p.utilityNuevo ? (p.utilityNuevo | number:'1.2-2') : '-' }}</strong></td>
+          <td><strong>{{ p.salePriceNuevo ? (p.salePriceNuevo | currency:'$':'symbol':'1.2-2') : '-' }}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Acciones finales -->
+  <div class="actions" *ngIf="filteredProducts.length > 0">
+    <button type="button" class="cancel-btn" (click)="onCancel()">Cancelar</button>
+    <button type="button" class="accept-btn" (click)="onAccept()">Aceptar</button>
+  </div>
+
+  <!-- Mensaje cuando no hay productos -->
+  <ng-template #noProducts>
+    <div class="empty-list" *ngIf="!isLoading">
+      No se encontraron productos con los filtros aplicados.
+    </div>
+  </ng-template>
+
+  <!-- Indicador de carga -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    Cargando productos...
+  </div>
+</div>
