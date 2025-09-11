@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service'; // La ruta cambió
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ import { AuthService } from '../../services/auth.service'; // La ruta cambió
     MatButtonModule,
     MatFormFieldModule,
     MatIconModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -28,6 +30,9 @@ import { AuthService } from '../../services/auth.service'; // La ruta cambió
 export class LoginComponent {
   loginForm: FormGroup;
   errorMessage: string | null = null;
+  hidePassword = true;
+  loading = false;
+
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -42,15 +47,18 @@ export class LoginComponent {
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.errorMessage = null;
+      this.loading = true;
       const { username, password } = this.loginForm.value;
+
       this.authService.login(username, password).subscribe({
         next: (success) => {
+          this.loading = false;
           if (success) {
-            console.log('Login exitoso desde el componente.');
             this.router.navigate(['/']);
           }
         },
         error: (err) => {
+          this.loading = false;
           this.errorMessage = 'Usuario o contraseña incorrectos.';
           console.error('Login fallido:', err);
         }
