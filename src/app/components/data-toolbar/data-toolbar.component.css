@@ -1,3 +1,15 @@
+/* Responsive: adapta la toolbar a pantallas pequeñas */
+@media (max-width: 600px) {
+  :host, .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .toolbar input, .toolbar button, .toolbar select {
+    width: 100%;
+    font-size: 16px;
+  }
+}
 .toolbar-container {
   display: flex;
   align-items: center;

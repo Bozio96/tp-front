@@ -1,6 +1,8 @@
+/* sidebar.component.css */
 
+/* Estilos para pantallas grandes (por defecto) */
 .sidebar {
-  width: 200px;
+  width: 200px; /* Ancho predeterminado para desktop */
   background-color: #2C3E50;
   color: white;
   height: 100vh;
@@ -11,7 +13,23 @@
 }
 
 .sidebar.collapsed {
-  width: 60px;
+  width: 60px; /* Ancho cuando está colapsado */
+}
+
+/* Estilos para pantallas pequeñas (móvil) */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px; /* Ancho fijo para móvil, sin importar el estado */
+  }
+
+  .burger-btn {
+    display: none; /* Oculta el botón en móvil */
+  }
+
+  .menu button span,
+  .bottom-section button span {
+    display: none; /* Oculta los textos en móvil */
+  }
 }
 
 .top-section {
@@ -37,9 +55,9 @@
 }
 
 .menu button {
-  background: none; 
+  background: none;
   border: none;
-  color: white; 
+  color: white;
   text-align: left;
   font-size: 16px;
   cursor: pointer;
@@ -48,30 +66,28 @@
   gap: 10px;
 }
 
-
-/* Cambios clave para mostrar íconos colapsados */
 .menu button.collapsed {
   justify-content: center;
   padding: 12px 0;
 }
 
 .menu button:hover {
-  color: #F39C12; 
-  background-color: transparent; /* Asegura que no haya un fondo, aunque la propiedad 'background: none' ya lo hace */
+  color: #F39C12;
+  background-color: transparent;
 }
 
 .menu button:hover .menu-icon {
-  fill: #F39C12; /* Y el color de relleno del ícono SVG */
+  fill: #F39C12;
 }
 
 .menu-icon {
   fill: currentColor;
 }
 
-
 .bottom-section {
   padding: 1rem;
   text-align: center;
+  position: relative;
 }
 
 .profile-btn {
@@ -88,7 +104,7 @@
 }
 
 .profile-btn:hover {
-  color: #F39C12;;
+  color: #F39C12;
 }
 
 .tooltip-arrow {
@@ -99,8 +115,8 @@
   border-radius: 4px;
 }
 
-/* Asegurar que los íconos se muestren */
-.menu-icon, .profile-icon {
+.menu-icon,
+.profile-icon {
   display: block;
   fill: #e3e3e3;
 }
@@ -108,3 +124,32 @@
 .profile-icon {
   fill: currentColor;
 }
+
+.profile-menu {
+    position: absolute; /* <-- AGREGAR ESTO */
+    bottom: 100%; /* Posiciona el menú justo encima del botón, puedes cambiarlo a 'top' si lo prefieres debajo. */
+    left: 50%; /* Centra el menú horizontalmente */
+    transform: translateX(-50%); /* Ajusta la posición para un centrado perfecto */
+    background-color: #202d3b; /* Un color de fondo que se vea bien, puedes cambiarlo */
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 8px 0;
+    z-index: 100; /* Asegura que se vea por encima de otros elementos */
+    width: 100px; /* Ancho del menú desplegable */
+}
+
+/* Estilos para el botón "Cerrar sesión" dentro del menú */
+.profile-menu button {
+    background: none;
+    border: none;
+    color: white;
+    padding: 3px 7px;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/*.profile-menu button:hover {
+    background-color: #303f9f; /* Color al pasar el mouse */
