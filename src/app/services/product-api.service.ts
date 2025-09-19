@@ -1,7 +1,7 @@
 // product-api.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product } from '../pages/products/product.model';
+import { Product } from '../models/product.model';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BulkUpdateResponse, DataItem, EntityType } from './product-types';

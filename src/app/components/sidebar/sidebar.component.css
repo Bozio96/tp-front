@@ -135,7 +135,13 @@
     border-radius: 8px;
     padding: 8px 0;
     z-index: 100; /* Asegura que se vea por encima de otros elementos */
-    width: 100px; /* Ancho del menú desplegable */
+    width: 114px; /* Ancho del menú desplegable */
+}
+
+.sidebar.collapsed .profile-menu {
+  left: 100%;
+  transform: translateX(0);
+  margin-left: 10px; /* Opcional: para dar un pequeño espacio */
 }
 
 /* Estilos para el botón "Cerrar sesión" dentro del menú */

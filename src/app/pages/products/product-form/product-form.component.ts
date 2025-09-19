@@ -13,8 +13,8 @@ import {
 } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
 import {ProductDataService} from '../../../services/product-data.service';
-import { Product } from '../product.model';
 import { DataItem } from '../../../services/product-types';
+import { Product } from '../../../models/product.model';
 
 // Validador personalizado que comprueba si un valor existe en una lista de opciones.
 function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
