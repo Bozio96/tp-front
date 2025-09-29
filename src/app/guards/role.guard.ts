@@ -1,20 +1,23 @@
 // src/app/guards/role.guard.ts
-import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
-export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
   const requiredRole = route.data['role'] as 'admin' | 'user';
-  const userRole = authService.getUserRole();
+  const currentUser = authService.getCurrentUser();
 
-  if (authService.isLoggedIn() && userRole === requiredRole) {
-    return true; // Si el usuario está logueado y tiene el rol requerido, permite el acceso.
+  // Verificamos si el usuario existe y si su rol es el requerido
+  if (currentUser && currentUser.role === requiredRole) {
+    return true;
   }
 
-  // Si no cumple el rol, redirige a una página de acceso denegado o a la página de inicio.
-  router.navigate(['/']); // Redirige a la página de inicio.
+  // Si no cumple con el rol, lo redirigimos a la página principal.
+  // Podrías también redirigir a una página de "Acceso Denegado".
+  console.warn(`Acceso denegado. Se requiere rol: ${requiredRole}, pero el usuario tiene rol: ${currentUser?.role}`);
+  router.navigate(['/']);
   return false;
 }; 

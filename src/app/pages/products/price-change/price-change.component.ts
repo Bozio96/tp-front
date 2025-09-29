@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductDataService} from '../../../services/product-data.service';
 import { ProductService } from '../../../services/product.service';
-import { Product } from '../product.model';
+import { Product } from '../../../models/product.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DataItem } from '../../../services/product-types';
 

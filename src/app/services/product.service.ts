@@ -2,7 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ProductApiService } from './product-api.service';
-import { Product } from '../pages/products/product.model';
+import { Product } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

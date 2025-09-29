@@ -10,9 +10,9 @@ import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { LoginComponent } from './components/login/login.component';
 import { DataListComponent } from './pages/products/data-list/data-list.component';
-import { ClientsListComponent } from './pages/clients/clients-list/clients-list.component';
-import { ClientFormComponent } from './pages/clients/client-form/client-form.component';
-import { ClientDetailComponent } from './pages/clients/client-detail/client-detail.component';
+import { AddUserComponent } from './pages/add-user/add-user.component';
+
+// Importamos el nuevo componente genérico que vamos a crear
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -22,6 +22,25 @@ export const routes: Routes = [
     children: [
       { path: '', component: HomePageComponent },
       { path: 'not-found', component: NotFoundComponent },
+      {
+        path: 'users',
+        canActivate: [roleGuard],
+        data: { role: 'admin' },
+        children: [
+          {
+            path: '',
+            loadComponent: () => import('./pages/users/user-list.component').then(c => c.UserListComponent),
+          },
+          {
+            path: 'add',
+            component: AddUserComponent,
+          },
+          {
+            path: 'edit/:id',
+            component: AddUserComponent,
+          }
+        ]
+      },
       {
         path: 'products',
         component: ProductContainerComponent,

@@ -3,7 +3,8 @@ import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService, User } from '../../services/auth.service'; // Asegúrate de que esta ruta sea la correcta.
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common'; // Importa AsyncPipe
 
@@ -41,13 +42,11 @@ export class SidebarComponent {
   }
   
   toggleProfileMenu(): void {
-    this.isLoggedIn$.subscribe(isLoggedIn => {
-      if (isLoggedIn) {
-        this.showProfileMenu = !this.showProfileMenu;
-      } else {
-        this.router.navigate(['/login']);
-      }
-    });
+    if (this.authService.isLoggedIn()) {
+      this.showProfileMenu = !this.showProfileMenu;
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   logout(): void {

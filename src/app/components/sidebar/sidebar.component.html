@@ -75,6 +75,8 @@
       <span>Ventas</span>
       }
     </button>
+
+    
   </nav>
 
   <div class="bottom-section">
@@ -94,10 +96,17 @@
       }
     </button>
 
-    @if (showProfileMenu) {
+        @if (showProfileMenu) {
       <div class="profile-menu">
         <button (click)="logout()">
           Cerrar sesión
+        </button>
+        <button
+          *ngIf="(currentUser$ | async)?.role === 'admin'"
+          routerLink="/users"
+          (click)="showProfileMenu = false"
+        >
+          Listar usuarios
         </button>
       </div>
     }

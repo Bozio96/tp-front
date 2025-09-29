@@ -1,0 +1,34 @@
+<div class="add-user-container">
+  <div class="add-user-card">
+    <div class="header">
+      <h2>{{ isEditMode ? 'Editar Usuario' : 'Añadir Nuevo Usuario' }}</h2>
+    </div>
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let role of roles" [value]="role">{{role}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="button-row">
+        <button mat-raised-button color="primary" class="submit-btn" type="submit" [disabled]="!userForm.valid">
+          {{ isEditMode ? 'Actualizar Usuario' : 'Añadir Usuario' }}
+        </button>
+        <button mat-raised-button color="warn" class="cancel-btn" type="button" (click)="onCancel()">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

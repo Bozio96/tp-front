@@ -6,7 +6,7 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { Product } from '../product.model';
+import { Product } from '../../../models/product.model';
 import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 import {ProductDataService} from '../../../services/product-data.service'; // <-- Nuevo: para obtener los filtros
 import { DataItem } from '../../../services/product-types';

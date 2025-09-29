@@ -48,14 +48,13 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.errorMessage = null;
       this.loading = true;
-      const { username, password } = this.loginForm.value;
-
-      this.authService.login(username, password).subscribe({
-        next: (success) => {
+      // Pasamos el objeto de credenciales como espera el nuevo servicio
+      this.authService.login(this.loginForm.value).subscribe({
+        next: (response) => {
           this.loading = false;
-          if (success) {
-            this.router.navigate(['/']);
-          }
+          console.log('Login exitoso, redirigiendo...', response);
+          // Si el login es exitoso (recibimos token), redirigimos a la página principal
+          this.router.navigate(['/']);
         },
         error: (err) => {
           this.loading = false;
