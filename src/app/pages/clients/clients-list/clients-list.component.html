@@ -1,3 +1,103 @@
+ <!--<div>
+  <app-data-toolbar
+  
+  ></app-data-toolbar> 
+
+
+    <button class="advanced-search-btn" (click)="toggleAdvancedSearch()">
+    <span class="material-symbols-outlined">
+    filter_alt
+    </span>
+  </button>
+
+</div>  -->
+
+
+<div class="clients-container">
+  <div *ngIf="loading" class="loading">
+    <div class="spinner">
+      Cargando clientes...
+    </div>
+  </div>
+  <div *ngIf="!loading">
+    <div *ngIf="filteredClients.length === 0" class="empty-list">
+      No se encontraron clientes
+      
+      <div *ngIf="searchTerm">con el nombre de "{{ searchTerm }}"</div>
+    </div>
+    <table *ngIf="filteredClients.length > 0" class="clients-table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>DNI</th>
+          <th>Cuil/Cuit</th>
+          <th>Teléfono</th>
+          <th>Domicilio</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let client of filteredClients">
+          <td>{{ client.nombre }}</td>
+          <td>{{ client.apellido }}</td>
+          <td>{{ client.dni }}</td>
+          <!-- <td>{{ client.cuil }}</td> -->
+          <td>{{ client.telefono }}</td>
+          <td>{{ client.domicilio }}</td>
+          <td class="action-cell" *ngIf="authService.hasRole('admin')">
+            <div class="action-container" #actionContainer>
+              <button
+                class="action-btn"
+                matTooltip="Acciones"
+                matTooltipPosition="after"
+                matTooltipClass="tooltip-arrow"
+              > 
+              <!-- En el botón falta el método: (click)="toggleMenu(client.id)" -->
+                <svg
+                  class="action-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="24px"
+                  viewBox="0 -960 960 960"
+                  width="24px"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
+                  />
+                </svg>
+            </button>
+
+            <div
+              *ngIf="menuClientId === client.id"
+              class="action-dropdown-menu"
+            >
+            <button class="menu-option">Editar</button>
+              <!-- Falta en el boton este método:  (click)="onEditClick(client.id)" -->
+            <button class="menu-option delete-option" >Eliminar</button>
+              <!-- Falta en el boton este método: (click)="onDeleteClick(client.id)" -->
+            </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+   
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="clients-header">
   <h1>CLIENTES</h1>
   <button mat-raised-button color="primary" [routerLink]="['/clients/new']">Agregar Cliente</button>

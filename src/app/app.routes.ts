@@ -11,6 +11,7 @@ import { roleGuard } from './guards/role.guard';
 import { LoginComponent } from './components/login/login.component';
 import { DataListComponent } from './pages/products/data-list/data-list.component';
 import { AddUserComponent } from './pages/add-user/add-user.component';
+import { ClientsListComponent } from './pages/clients/clients-list/clients-list.component';
 
 // Importamos el nuevo componente genérico que vamos a crear
 
@@ -96,7 +97,7 @@ export const routes: Routes = [
         path: 'clients',
         children: [
           { path: '', component: ClientsListComponent },
-          {
+         /*  {
             path: 'new',
             component: ClientFormComponent,
             canDeactivate: [PendingChangesGuard],
@@ -106,7 +107,7 @@ export const routes: Routes = [
             component: ClientFormComponent,
             canDeactivate: [PendingChangesGuard],
           },
-          { path: ':id', component: ClientDetailComponent },
+          { path: ':id', component: ClientDetailComponent }, */
         ]
       }
     ]
