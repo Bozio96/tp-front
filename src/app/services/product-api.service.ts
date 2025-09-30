@@ -1,8 +1,8 @@
 // product-api.service.ts
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/product.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BulkUpdateResponse, DataItem, EntityType } from './product-types';
 
@@ -10,12 +10,9 @@ import { BulkUpdateResponse, DataItem, EntityType } from './product-types';
 export class ProductApiService {
   private readonly baseUrl = 'http://localhost:3000/api';
   private readonly productsUrl = `${this.baseUrl}/products`;
-  
 
   constructor(private http: HttpClient) {}
 
-
-  // --- OPERACIONES DE PRODUCTOS ---
   getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.productsUrl).pipe(
       catchError(error => {
@@ -29,7 +26,7 @@ export class ProductApiService {
     return this.http.get<Product>(`${this.productsUrl}/${id}`).pipe(
       catchError(error => {
         console.error(`API - Error al obtener producto ${id}:`, error);
-        return of({} as Product);
+        return throwError(() => error);
       })
     );
   }
@@ -38,16 +35,16 @@ export class ProductApiService {
     return this.http.post<Product>(this.productsUrl, product).pipe(
       catchError(error => {
         console.error('API - Error al crear producto:', error);
-        return of(product);
+        return throwError(() => error);
       })
     );
   }
 
-  updateProduct(product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.productsUrl}/${product.id}`, product).pipe(
+  updateProduct(id: number, payload: Partial<Product>): Observable<Product> {
+    return this.http.put<Product>(`${this.productsUrl}/${id}`, payload).pipe(
       catchError(error => {
-        console.error(`API - Error al actualizar producto ${product.id}:`, error);
-        return of(product);
+        console.error(`API - Error al actualizar producto ${id}:`, error);
+        return throwError(() => error);
       })
     );
   }
@@ -56,7 +53,7 @@ export class ProductApiService {
     return this.http.delete<void>(`${this.productsUrl}/${id}`).pipe(
       catchError(error => {
         console.error(`API - Error al eliminar producto ${id}:`, error);
-        return of(undefined);
+        return throwError(() => error);
       })
     );
   }
@@ -64,13 +61,12 @@ export class ProductApiService {
   bulkUpdateProducts(products: any[]): Observable<BulkUpdateResponse> {
     return this.http.patch<BulkUpdateResponse>(`${this.productsUrl}/bulk-update`, products).pipe(
       catchError(error => {
-        console.error('API - Error en actualización masiva:', error);
+        console.error('API - Error en actualizacion masiva:', error);
         return of({ success: false });
       })
     );
   }
 
-  // --- OPERACIONES DE DATOS MAESTROS ---
   getBrands(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/brands`).pipe(
       catchError(error => {
@@ -92,7 +88,7 @@ export class ProductApiService {
   getCategories(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/categories`).pipe(
       catchError(error => {
-        console.error('API - Error al obtener categorías:', error);
+        console.error('API - Error al obtener categorias:', error);
         return of([]);
       })
     );
@@ -111,19 +107,24 @@ export class ProductApiService {
     return this.http.get<DataItem>(`${this.baseUrl}/${type}/${id}`).pipe(
       catchError(error => {
         console.error(`API - Error al obtener ${type} ${id}:`, error);
-        return of({ id: 0, name: '' } as DataItem);
+        return throwError(() => error);
       })
     );
   }
 
   saveItem(type: EntityType, item: DataItem): Observable<DataItem> {
     const url = `${this.baseUrl}/${type}`;
-    return (item.id && item.id > 0) 
-      ? this.http.put<DataItem>(url, item)
-      : this.http.post<DataItem>(url, item);
+    const { id, ...rest } = item;
+
+    if (!id || id <= 0) {
+      return this.http.post<DataItem>(url, rest as DataItem);
+    }
+
+    return this.http.put<DataItem>(`${url}/${id}`, rest as DataItem);
   }
 
   deleteItem(type: EntityType, id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${type}/${id}`);
   }
 }
+

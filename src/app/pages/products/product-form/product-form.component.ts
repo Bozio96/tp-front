@@ -12,9 +12,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { ProductService } from '../../../services/product.service';
-import {ProductDataService} from '../../../services/product-data.service';
+import { ProductDataService } from '../../../services/product-data.service';
+import { NotificationService } from '../../../services/notification.service';
 import { DataItem } from '../../../services/product-types';
 import { Product } from '../../../models/product.model';
+import { take } from 'rxjs';
 
 // Validador personalizado que comprueba si un valor existe en una lista de opciones.
 function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
@@ -64,13 +66,15 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   availableSuppliers: DataItem[] = [];
 
   readonly IVA_RATE = 0.21;
-  private isCalculating: boolean = false;
+  private isCalculating = false;
+  isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
     private productDataService: ProductDataService,
+    private notifications: NotificationService,
     private fb: FormBuilder
   ) {}
 
@@ -81,6 +85,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
 
     if (id) {
       this.isEditing = true;
+      this.isLoading = true;
       this.productService.getProductById(+id).subscribe({
         next: (product) => {
           if (product) {
@@ -97,38 +102,22 @@ export class ProductFormComponent implements OnInit, OnDestroy {
               category: getNameIfObject(product.category),
               department: getNameIfObject(product.department),
             });
+            this.isLoading = false;
+            return;
           }
+
+          this.notifications.showError('No se encontr� el producto solicitado.');
+          this.isLoading = false;
+          this.router.navigate(['/products']);
         },
         error: (err) => {
           console.error('Error al obtener el producto:', err);
-          this.router.navigate(['/not-found']);
+          this.notifications.showError(this.getErrorMessage(err, 'No se pudo cargar el producto.'));
+          this.isLoading = false;
+          this.router.navigate(['/products']);
         },
       });
     }
-
-    // Cargamos los datos para los filtros y aplicamos el validador
-    // a cada campo una vez que los datos estén disponibles.
-    this.productDataService.getBrands().subscribe((data) => {
-      this.availableBrands = data;
-      this.productForm
-        .get('brand')
-        ?.setValidators(valueExistsValidator(this.availableBrands));
-      this.productForm.get('brand')?.updateValueAndValidity();
-    });
-    this.productDataService.getDepartments().subscribe((data) => {
-      this.availableDepartments = data;
-      this.productForm
-        .get('department')
-        ?.setValidators(valueExistsValidator(this.availableDepartments));
-      this.productForm.get('department')?.updateValueAndValidity();
-    });
-    this.productDataService.getCategories().subscribe((data) => {
-      this.availableCategories = data;
-      this.productForm
-        .get('category')
-        ?.setValidators(valueExistsValidator(this.availableCategories));
-      this.productForm.get('category')?.updateValueAndValidity();
-    });
     this.productDataService.getSuppliers().subscribe((data) => {
       this.availableSuppliers = data;
       this.productForm
@@ -145,24 +134,36 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  createForm(): void {
+  private createForm(): void {
     this.productForm = this.fb.group({
-      // id: [{ value: 0, disabled: true }], // Ocultamos el id
       sku: ['', Validators.required],
       name: ['', Validators.required],
-      price: [],
-      stock: [Validators.required],
-      costBase: [Validators.required],
-      discounts: [],
+      price: [0],
+      stock: [0, Validators.required],
+      costBase: [0, Validators.required],
+      discounts: [0],
       includeIVA: [false],
       utilityPercentage: [0],
-      salePrice: [Validators.required],
+      salePrice: [0, Validators.required],
       minStock: [0],
       supplier: [''],
       brand: [''],
       category: [''],
       department: [''],
+      costBaseWithIVA: [{ value: 0, disabled: true }],
+      finalCost: [{ value: 0, disabled: true }],
     });
+
+    this.productForm.valueChanges.subscribe(() => {
+      if (!this.isLoading && this.productForm.pristine) {
+        this.productForm.markAsDirty();
+      }
+      this.updateComputedFields();
+    });
+
+    this.productForm.markAsPristine();
+    this.productForm.markAsUntouched();
+    this.updateComputedFields();
 
     this.productForm
       .get('costBase')
@@ -180,7 +181,23 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       .get('salePrice')
       ?.valueChanges.subscribe(() => this.onSalePriceChange());
   }
+  private updateComputedFields(): void {
+    if (!this.productForm) {
+      return;
+    }
 
+    const costBase = Number(this.productForm.get('costBase')?.value) || 0;
+    const costBaseWithIVA = costBase * (1 + this.IVA_RATE);
+    const finalCost = this.finalCost;
+
+    this.productForm
+      .get('costBaseWithIVA')
+      ?.setValue(this.round(costBaseWithIVA), { emitEvent: false });
+
+    this.productForm
+      .get('finalCost')
+      ?.setValue(this.round(finalCost), { emitEvent: false });
+  }
   get netCost(): number {
     const costBase = Number(this.productForm.get('costBase')?.value) || 0;
     const discounts = Number(this.productForm.get('discounts')?.value) || 0;
@@ -262,75 +279,154 @@ export class ProductFormComponent implements OnInit, OnDestroy {
 
   onSave(): void {
     if (this.productForm.invalid) {
-      console.warn('Formulario inválido. No se puede guardar.');
       this.productForm.markAllAsTouched();
+      this.notifications.showError('Revis� los campos obligatorios antes de guardar.');
       return;
     }
-    let productToSave: any = this.productForm.getRawValue();
-    // Si discounts es null, undefined o vacío, ponerlo en 0
-    if (productToSave.discounts === null || productToSave.discounts === undefined || productToSave.discounts === '') {
-      productToSave.discounts = 0;
-    }
-    // Convertir los campos de nombre a objeto con id si corresponde
-    function getEntityByName(list: any[], name: string) {
-      return list.find(item => item.name === name);
-    }
-    const brandObj = getEntityByName(this.availableBrands, productToSave.brand);
-    const categoryObj = getEntityByName(this.availableCategories, productToSave.category);
-    const supplierObj = getEntityByName(this.availableSuppliers, productToSave.supplier);
-    const departmentObj = getEntityByName(this.availableDepartments, productToSave.department);
 
-    if (brandObj) productToSave.brand = { id: brandObj.id };
-    else productToSave.brand = null;
-    if (categoryObj) productToSave.category = { id: categoryObj.id };
-    else productToSave.category = null;
-    if (supplierObj) productToSave.supplier = { id: supplierObj.id };
-    else productToSave.supplier = null;
-    if (departmentObj) productToSave.department = { id: departmentObj.id };
-    else productToSave.department = null;
+    this.isLoading = true;
+    const productToSave = this.prepareProductPayload();
 
-    // Si es edición, agregamos el id manualmente (aunque no se muestre en el form)
+    let request$;
     if (this.isEditing) {
-      const id = this.route.snapshot.paramMap.get('id');
-      if (id) {
-        productToSave.id = +id;
+      const idParam = this.route.snapshot.paramMap.get('id');
+      const id = idParam ? Number(idParam) : NaN;
+      if (!idParam || Number.isNaN(id)) {
+        this.notifications.showError('No se pudo determinar el identificador del producto.');
+        this.isLoading = false;
+        return;
       }
-    }
-
-    // Validar SKU repetido antes de enviar (solo en alta)
-    if (!this.isEditing) {
-      // Buscar si el SKU ya existe en la lista de productos (requiere método en ProductService)
-      this.productService.getAllProducts().subscribe((products: any[]) => {
-        const exists = products.some((p) => p.sku === productToSave.sku);
-        if (exists) {
-          alert('El SKU ya existe. Por favor, ingrese uno diferente.');
-          return;
-        } else {
-          this.productService.addProduct(productToSave).subscribe({
-            next: () => this.router.navigate(['/products']),
-            error: (err) => {
-              if (err && err.error && err.error.message && err.error.message.includes('duplicate')) {
-                alert('El SKU ya existe en la base de datos.');
-              } else {
-                alert('Error al agregar el producto.');
-                console.error('Error al agregar:', err);
-              }
-            },
-          });
-        }
-      });
+      request$ = this.productService.updateProduct(id, productToSave);
     } else {
-      this.productService.updateProduct(productToSave).subscribe({
-        next: () => this.router.navigate(['/products']),
-        error: (err) => {
-          alert('Error al actualizar el producto.');
-          console.error('Error al actualizar:', err);
-        },
-      });
+      request$ = this.productService.addProduct(productToSave as Product);
     }
-  }
 
+    request$.subscribe({
+      next: () => {
+        const message = this.isEditing
+          ? 'Producto actualizado correctamente.'
+          : 'Producto agregado correctamente.';
+        this.notifications.showSuccess(message);
+        this.productForm.markAsPristine();
+        this.productForm.markAsUntouched();
+        this.isLoading = false;
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        console.error('Error al guardar el producto:', err);
+        const fallback = this.isEditing
+          ? 'No se pudo actualizar el producto.'
+          : 'No se pudo agregar el producto.';
+        this.notifications.showError(this.getErrorMessage(err, fallback));
+        this.isLoading = false;
+      },
+    });
+  }
+  private prepareProductPayload(): Partial<Product> {
+    const raw = this.productForm.getRawValue();
+    const product: Record<string, any> = { ...raw };
+
+    const toNumber = (value: unknown): number | undefined => {
+      if (value === null || value === undefined || value === '') {
+        return undefined;
+      }
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    };
+
+    const toInteger = (value: unknown): number | undefined => {
+      const parsed = toNumber(value);
+      return parsed !== undefined ? Math.trunc(parsed) : undefined;
+    };
+
+    const decimalFields: Array<keyof Product> = [
+      'price',
+      'costBase',
+      'discounts',
+      'utilityPercentage',
+      'salePrice',
+    ];
+
+    decimalFields.forEach((field) => {
+      const parsed = toNumber(product[field]);
+      if (parsed === undefined) {
+        delete product[field];
+      } else {
+        product[field] = parsed;
+      }
+    });
+
+    const integerFields: Array<keyof Product> = ['stock', 'minStock'];
+    integerFields.forEach((field) => {
+      const parsed = toInteger(product[field]);
+      if (parsed === undefined) {
+        delete product[field];
+      } else {
+        product[field] = parsed;
+      }
+    });
+
+    if (!('discounts' in product) || product['discounts'] === undefined) {
+      product['discounts'] = 0;
+    }
+
+    const assignRelation = (
+      key: 'brand' | 'category' | 'supplier' | 'department',
+      list: DataItem[],
+    ) => {
+      const value = product[key];
+      const name = typeof value === 'string' ? value : value?.name;
+      const match = list.find((item) => item.name === name);
+      product[key] = match ? { id: match.id } : undefined;
+    };
+
+    assignRelation('brand', this.availableBrands);
+    assignRelation('category', this.availableCategories);
+    assignRelation('supplier', this.availableSuppliers);
+    assignRelation('department', this.availableDepartments);
+
+    delete product['costBaseWithIVA'];
+    delete product['finalCost'];
+
+    Object.keys(product).forEach((key) => {
+      if (product[key] === undefined) {
+        delete product[key];
+      }
+    });
+
+    delete product['id'];
+
+    return product;
+  }
+  private getErrorMessage(error: unknown, fallback: string): string {
+    const backendMessage = (error as any)?.error?.message;
+    if (typeof backendMessage === 'string' && backendMessage.trim().length > 0) {
+      return backendMessage;
+    }
+
+    const genericMessage = (error as any)?.message;
+    if (typeof genericMessage === 'string' && genericMessage.trim().length > 0) {
+      return genericMessage;
+    }
+
+    return fallback;
+  }
   onCancel(): void {
     this.router.navigate(['/products']);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

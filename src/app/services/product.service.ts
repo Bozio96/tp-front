@@ -1,12 +1,11 @@
-import { Injectable, Injector } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ProductApiService } from './product-api.service';
 import { Product } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  // Elimina todo el código de inyección diferida
   constructor(private api: ProductApiService) {}
 
   getAllProducts(): Observable<Product[]> {
@@ -22,10 +21,11 @@ export class ProductService {
     if (!term.trim()) {
       return this.getAllProducts();
     }
+
     return this.getAllProducts().pipe(
-      map(products => products.filter(p => 
-        p.name.toLowerCase().includes(term.toLowerCase())
-      )),
+      map(products =>
+        products.filter(p => p.name.toLowerCase().includes(term.toLowerCase()))
+      ),
       catchError(error => {
         console.error('Error al buscar productos', error);
         return of([]);
@@ -33,37 +33,34 @@ export class ProductService {
     );
   }
 
-  getProductById(id: number): Observable<Product | undefined> {
+  getProductById(id: number): Observable<Product> {
     return this.api.getProductById(id).pipe(
-      map(product => product),
       catchError(error => {
-        console.error(`Error al obtener producto con ID ${id}`, error);
-        return of(undefined);
+        console.error('Error al obtener producto con ID ' + id, error);
+        return throwError(() => error);
       })
     );
   }
 
   getProductCount(): Observable<number> {
-    return this.getAllProducts().pipe(
-      map(products => products.length)
-    );
+    return this.getAllProducts().pipe(map(products => products.length));
   }
 
   addProduct(newProduct: Product): Observable<Product> {
     return this.api.createProduct(newProduct).pipe(
       catchError(error => {
         console.error('Error al agregar producto', error);
-        return of(newProduct);
+        return throwError(() => error);
       })
     );
   }
 
-  updateProduct(updatedProduct: Product): Observable<Product> {
-    return this.api.updateProduct(updatedProduct).pipe(
+  updateProduct(id: number, updates: Partial<Product>): Observable<Product> {
+    return this.api.updateProduct(id, updates).pipe(
       map(product => product),
       catchError(error => {
         console.error('Error al actualizar producto', error);
-        return of(updatedProduct);
+        return throwError(() => error);
       })
     );
   }
@@ -73,12 +70,11 @@ export class ProductService {
       map(() => true),
       catchError(error => {
         console.error(`Error al eliminar producto con ID ${id}`, error);
-        return of(false);
+        return throwError(() => error);
       })
     );
   }
 
-  // CORREGIDO: Usa this.api en lugar de this.http
   bulkUpdateProducts(updatedProducts: Product[]): Observable<boolean> {
     const payload = updatedProducts
       .map(p => ({
@@ -87,18 +83,21 @@ export class ProductService {
         salePrice: p.salePriceNuevo ?? undefined,
         utilityPercentage: p.utilityNuevo ?? undefined,
       }))
-      .filter(p => p.costBase !== undefined || p.salePrice !== undefined || p.utilityPercentage !== undefined);
+      .filter(p =>
+        p.costBase !== undefined ||
+        p.salePrice !== undefined ||
+        p.utilityPercentage !== undefined
+      );
 
     if (payload.length === 0) {
-      return of(true); // No hay cambios, pero no es error
+      return of(true);
     }
 
-    // Usa el servicio API, NO http directamente
     return this.api.bulkUpdateProducts(payload).pipe(
       map(response => (response as { success: boolean }).success),
       catchError(error => {
-        console.error('Error en actualización masiva de precios', error);
-        return of(false);
+        console.error('Error en actualizacion masiva de precios', error);
+        return throwError(() => error);
       })
     );
   }
