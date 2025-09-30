@@ -15,3 +15,46 @@ body {
 }
 
 /* Estilo global para el Snackbar de error */
+
+
+.snackbar-success {
+  background-color: #2e7d32;
+  color: #ffffff;
+}
+
+.snackbar-error {
+  background-color: #c62828;
+  color: #ffffff;
+}
+
+.snackbar-info {
+  background-color: #1565c0;
+  color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-success .mdc-snackbar__surface,
+.mat-mdc-snack-bar-container.snackbar-error .mdc-snackbar__surface,
+.mat-mdc-snack-bar-container.snackbar-info .mdc-snackbar__surface {
+  color: #ffffff;
+}
+
+.mat-mdc-snack-bar-container.snackbar-success .mdc-snackbar__surface {
+  background-color: #2e7d32;
+}
+
+.mat-mdc-snack-bar-container.snackbar-error .mdc-snackbar__surface {
+  background-color: #c62828;
+}
+
+.mat-mdc-snack-bar-container.snackbar-info .mdc-snackbar__surface {
+  background-color: #1565c0;
+}
+
+.mat-mdc-snack-bar-container.snackbar-success .mdc-snackbar__label,
+.mat-mdc-snack-bar-container.snackbar-error .mdc-snackbar__label,
+.mat-mdc-snack-bar-container.snackbar-info .mdc-snackbar__label,
+.mat-mdc-snack-bar-container.snackbar-success .mat-mdc-snack-bar-action .mdc-button__label,
+.mat-mdc-snack-bar-container.snackbar-error .mat-mdc-snack-bar-action .mdc-button__label,
+.mat-mdc-snack-bar-container.snackbar-info .mat-mdc-snack-bar-action .mdc-button__label {
+  color: #ffffff;
+}
