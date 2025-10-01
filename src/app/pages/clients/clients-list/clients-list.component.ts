@@ -10,6 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 
 @Component({
   selector: 'app-clients-list',
@@ -21,7 +22,8 @@ import { AuthService } from '../../../services/auth.service';
     MatIconModule,
     MatTableModule,
     RouterModule,
-    CommonModule
+    CommonModule,
+    DataToolbarComponent
   ],
   templateUrl: './clients-list.component.html',
   styleUrl: './clients-list.component.css'
@@ -33,12 +35,8 @@ export class ClientsListComponent implements OnInit {
   allClients: Client[] = [];
   loading: boolean = true;
   menuClientId: number | null = null;
-  showAdvancedSearch: boolean = false; //Quizas no sea necesario
-
-  advancedSearchForm!: FormGroup; //Quizas no sea necesario
 
   private searchTerms = new Subject<string>();
-  private clientsSubscription: Subscription | undefined; //Quizas no sea necesario
 
   
   /* Código mio debajo */

@@ -1,28 +1,28 @@
- <!--<div>
+<div class="header-clients">
+  <h1>Clientes</h1>
+</div>
+
+<div class="header-toolbar-container">
   <app-data-toolbar
-  
-  ></app-data-toolbar> 
+    [searchTerm]="searchTerm"
+    [showSearch]="true"
+    [showAddButton]="authService.hasRole('admin')"
+    [addLabel]="'Agregar Cliente'"
+  >
+<!-- Faltan métodos, copiar de productos -->
+</app-data-toolbar>
 
-
-    <button class="advanced-search-btn" (click)="toggleAdvancedSearch()">
-    <span class="material-symbols-outlined">
-    filter_alt
-    </span>
-  </button>
-
-</div>  -->
-
+</div>
 
 <div class="clients-container">
   <div *ngIf="loading" class="loading">
-    <div class="spinner">
-      Cargando clientes...
-    </div>
+    <div class="spinner"></div>
+    Cargando clientes...
   </div>
   <div *ngIf="!loading">
     <div *ngIf="filteredClients.length === 0" class="empty-list">
       No se encontraron clientes
-      
+
       <div *ngIf="searchTerm">con el nombre de "{{ searchTerm }}"</div>
     </div>
     <table *ngIf="filteredClients.length > 0" class="clients-table">
@@ -33,7 +33,8 @@
           <th>DNI</th>
           <th>Cuil/Cuit</th>
           <th>Teléfono</th>
-          <th>Domicilio</th></tr>
+          <th>Domicilio</th>
+        </tr>
       </thead>
       <tbody>
         <tr *ngFor="let client of filteredClients">
@@ -50,8 +51,8 @@
                 matTooltip="Acciones"
                 matTooltipPosition="after"
                 matTooltipClass="tooltip-arrow"
-              > 
-              <!-- En el botón falta el método: (click)="toggleMenu(client.id)" -->
+              >
+                <!-- En el botón falta el método: (click)="toggleMenu(client.id)" -->
                 <svg
                   class="action-icon"
                   xmlns="http://www.w3.org/2000/svg"
@@ -64,98 +65,24 @@
                     d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
                   />
                 </svg>
-            </button>
+              </button>
 
-            <div
-              *ngIf="menuClientId === client.id"
-              class="action-dropdown-menu"
-            >
-            <button class="menu-option">Editar</button>
-              <!-- Falta en el boton este método:  (click)="onEditClick(client.id)" -->
-            <button class="menu-option delete-option" >Eliminar</button>
-              <!-- Falta en el boton este método: (click)="onDeleteClick(client.id)" -->
-            </div>
+              <div
+                *ngIf="menuClientId === client.id"
+                class="action-dropdown-menu"
+              >
+                <button class="menu-option">Editar</button>
+                <!-- Falta en el boton este método:  (click)="onEditClick(client.id)" -->
+                <button class="menu-option delete-option">Eliminar</button>
+                <!-- Falta en el boton este método: (click)="onDeleteClick(client.id)" -->
+              </div>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-
   </div>
-   
 </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-<div class="clients-header">
-  <h1>CLIENTES</h1>
-  <button mat-raised-button color="primary" [routerLink]="['/clients/new']">Agregar Cliente</button>
-</div>
-
-<!-- Barra de búsqueda -->
-<mat-form-field appearance="outline">
-  <mat-icon matSuffix>search</mat-icon>
-  <input matInput placeholder="Buscar clientes" #searchInput (keyup)="search(searchInput.value)">
-</mat-form-field>
-
-<!-- Tabla -->
-<table mat-table [dataSource]="data" class="mat-elevation-z8">
-  <!-- Columna Nombre -->
-  <ng-container matColumnDef="nombre">
-    <th mat-header-cell *matHeaderCellDef> Nombre</th>
-    <td mat-cell *matCellDef="let client">{{client.nombre}}</td>
-  </ng-container>
-
-  <!-- Columna Apellido -->
-  <ng-container matColumnDef="apellido">
-    <th mat-header-cell *matHeaderCellDef> Apellido </th>
-    <td mat-cell *matCellDef="let client">{{client.apellido}}</td>
-  </ng-container>
-
-  <!-- Columna DNI -->
-  <ng-container matColumnDef="dni">
-    <th mat-header-cell *matHeaderCellDef> DNI </th>
-    <td mat-cell *matCellDef="let client">{{client.dni}}</td>
-  </ng-container>
-
-  <!-- Columna Teléfono -->
-  <ng-container matColumnDef="telefono">
-    <th mat-header-cell *matHeaderCellDef> Teléfono </th>
-    <td mat-cell *matCellDef="let client">{{client.telefono}}</td>
-  </ng-container>
-
-  <!-- Columna Domicilio -->
-  <ng-container matColumnDef="domicilio">
-    <th mat-header-cell *matHeaderCellDef> Domicilio </th>
-    <td mat-cell *matCellDef="let client">{{client.domicilio}}</td>
-  </ng-container>
-
-  <!-- Columna Acciones -->
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef> Acciones </th>
-    <td mat-cell *matCellDef="let client">
-      <button mat-icon-button [routerLink]="['/clients/edit', client.id]">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button (click)="deleteClient(client.id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </td>
-  </ng-container>
-
-  <!-- Columnas -->
-  <tr mat-header-row *matHeaderRowDef="columns"></tr>
-  <!-- Filas -->
-  <tr mat-row *matRowDef="let row; columns: columns;"></tr>
-</table>
