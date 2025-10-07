@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ClientApiService } from './client-api.service';
-import { Client } from '../pages/clients/client.model';
+import { Client } from '../models/client.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
-import { Client } from '../client.model';
+import { Client } from '../../../models/client.model';
 
 @Component({
   selector: 'app-client-form',
@@ -55,6 +55,7 @@ export class ClientFormComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
+      cuil: ['', [Validators.required, Validators.pattern('^[0-9]{11}$')]],
       telefono: ['', Validators.required],
       domicilio: ['', Validators.required],
       foto: [''],
