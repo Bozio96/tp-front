@@ -14,46 +14,31 @@ export class ClientApiService {
 
   getAllClients(): Observable<Client[]> {
     return this.http.get<Client[]>(this.clientsUrl).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener clientes:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getClientById(id: number): Observable<Client> {
     return this.http.get<Client>(`${this.clientsUrl}/${id}`).pipe(
-      catchError(error => {
-        console.error(`API - Error al obtener cliente ${id}:`, error);
-        return of({} as Client);
-      })
+      catchError(() => of({} as Client))
     );
   }
 
   createClient(client: Client): Observable<Client> {
     return this.http.post<Client>(this.clientsUrl, client).pipe(
-      catchError(error => {
-        console.error('API - Error al crear cliente:', error);
-        return of(client);
-      })
+      catchError(() => of(client))
     );
   }
 
   updateClient(client: Client): Observable<Client> {
     return this.http.put<Client>(`${this.clientsUrl}/${client.id}`, client).pipe(
-      catchError(error => {
-        console.error(`API - Error al actualizar cliente ${client.id}:`, error);
-        return of(client);
-      })
+      catchError(() => of(client))
     );
   }
 
   deleteClient(id: number): Observable<void> {
     return this.http.delete<void>(`${this.clientsUrl}/${id}`).pipe(
-      catchError(error => {
-        console.error(`API - Error al eliminar cliente ${id}:`, error);
-        return of(undefined);
-      })
+      catchError(() => of(undefined))
     );
   }
 }

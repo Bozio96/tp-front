@@ -5,17 +5,19 @@ import {FormsModule,ReactiveFormsModule,FormBuilder,FormGroup,} from '@angular/f
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Product } from '../../../models/product.model';
 import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 import {ProductDataService} from '../../../services/product-data.service'; // <-- Nuevo: para obtener los filtros
 import { DataItem } from '../../../services/product-types';
 import { AuthService } from '../../../services/auth.service';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-products-list',
   standalone: true,
-  imports: [CommonModule,FormsModule,MatTooltipModule,DataToolbarComponent,ReactiveFormsModule,],
+  imports: [CommonModule,FormsModule,MatTooltipModule,MatIconModule,DataToolbarComponent,ReactiveFormsModule,],
   templateUrl: './products-list.component.html',
   styleUrls: ['./products-list.component.css'],
 })
@@ -46,6 +48,7 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
     private router: Router,
     private fb: FormBuilder, // <-- Nuevo: FormBuilder para crear el formulario
     private productDataService: ProductDataService,
+    private notifications: NotificationService,
     public authService: AuthService // <-- Nuevo: para obtener los datos de filtro
   ) {}
 
@@ -72,8 +75,8 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
           this.applyFilters(); // Aplicamos filtros después de cada búsqueda
           this.loading = false;
         },
-        error: (err) => {
-          console.error('Error al cargar productos:', err);
+        error: () => {
+          this.notifications.showError('No se pudieron cargar los productos.');
           this.loading = false;
           this.allProducts = [];
           this.filteredProducts = [];
@@ -214,11 +217,11 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
             this.allProducts = this.allProducts.filter(p => p.id !== productId);
             this.applyFilters();
           } else {
-            console.error('No se pudo eliminar el producto.');
+            this.notifications.showError('No se pudo eliminar el producto.');
           }
         },
-        (error) => {
-          console.error('Error al eliminar producto:', error);
+        () => {
+          this.notifications.showError('Ocurrió un error al eliminar el producto.');
         }
       );
     }

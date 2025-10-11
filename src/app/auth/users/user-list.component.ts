@@ -6,6 +6,7 @@ import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { DataToolbarComponent } from '../../components/data-toolbar/data-toolbar.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-user-list',
@@ -27,7 +28,8 @@ export class UserListComponent implements OnInit {
   constructor(
     private userService: UserService,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private notifications: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +50,7 @@ export class UserListComponent implements OnInit {
         this.loading = false;
       },
       (error: any) => {
-        console.error('Error al obtener los usuarios:', error);
+        this.notifications.showError('Ocurrió un error al cargar los usuarios.');
         this.loading = false;
       }
     );
@@ -87,7 +89,7 @@ export class UserListComponent implements OnInit {
           this.menuItemId = null;
         },
         error: (error: any) => {
-          console.error('Error al eliminar el usuario:', error);
+          this.notifications.showError('No se pudo eliminar el usuario.');
           this.menuItemId = null;
         },
       });

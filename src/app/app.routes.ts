@@ -8,10 +8,11 @@ import { ProductFormComponent } from './pages/products/product-form/product-form
 import { PriceChangeComponent } from './pages/products/price-change/price-change.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './auth/login/login.component';
 import { DataListComponent } from './pages/products/data-list/data-list.component';
-import { AddUserComponent } from './pages/add-user/add-user.component';
+import { AddUserComponent } from './auth/add-user/add-user.component';
 import { ClientsListComponent } from './pages/clients/clients-list/clients-list.component';
+import { SalesComponent } from './pages/sales/sales.component';
 
 // Importamos el nuevo componente genérico que vamos a crear
 
@@ -30,7 +31,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            loadComponent: () => import('./pages/users/user-list.component').then(c => c.UserListComponent),
+            loadComponent: () => import('./auth/users/user-list.component').then(c => c.UserListComponent),
           },
           {
             path: 'add',
@@ -94,6 +95,10 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'sales',
+        component: SalesComponent,
+      },
+      {
         path: 'clients',
         children: [
           { path: '', component: ClientsListComponent },
@@ -114,3 +119,4 @@ export const routes: Routes = [
   },
   { path: '**', component: NotFoundComponent }
 ];
+
