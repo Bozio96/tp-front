@@ -9,15 +9,97 @@
 	}
 }
 
-.home-container {
-  display: flex;
-  justify-content: center; /* centra horizontal */
-  align-items: center;     /* centra vertical */
-  height: 100vh;           /* ocupa toda la pantalla */
-  background-color: #f9f9f9; /* opcional, para que se vea mejor */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
 }
 
-.logo {
-  width: 400px;   /* ajusta el tamaño a lo que quieras */
-  opacity: 0.5;   /* hace el logo transparente */
+h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  min-width: 250px;
+}
+
+.card h4 {
+  color: #34495e;
+}
+
+.card .value {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #2980b9;
+  margin-top: 0.5rem;
+}
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card.pie-chart {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-card.pie-chart canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.chart-card h3 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.card-table {
+  background: #fff;
+  border-radius: 12px;
+  margin-top: 2rem;
+  padding: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background: #f8f9fa;
+  text-align: left;
 }

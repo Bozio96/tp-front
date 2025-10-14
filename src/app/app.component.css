@@ -1,12 +1,17 @@
+:host {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f7f9fc;
+}
+
+.layout-sidebar {
+  flex-shrink: 0;
+}
+
 .main-content {
-  margin-left: 200px; /* Margen para el sidebar expandido */
-  transition: margin-left 0.3s ease; /* Transición suave para el margen */
-  box-sizing: border-box; 
+  flex: 1;
+  min-height: 100vh;
+  box-sizing: border-box;
   padding: 0;
+  overflow-x: hidden;
 }
-
-.main-content-expanded {
-  margin-left: 60px; /* Nuevo margen para dejar espacio al sidebar colapsado */
-  
-}
-

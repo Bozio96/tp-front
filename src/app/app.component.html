@@ -1,6 +1,9 @@
-<app-sidebar (collapsedStateChange)="onSidebarCollapsedChange($event)"></app-sidebar>
+<app-sidebar
+  class="layout-sidebar"
+  (collapsedStateChange)="onSidebarCollapsedChange($event)"
+></app-sidebar>
 
-<div class="main-content" [class.main-content-expanded]="isSidebarCollapsed">
+<div class="main-content">
   <router-outlet></router-outlet>
 
   </div>

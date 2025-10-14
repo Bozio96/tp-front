@@ -2,33 +2,42 @@
 
 /* Estilos para pantallas grandes (por defecto) */
 .sidebar {
-  width: 200px; /* Ancho predeterminado para desktop */
+  width: 200px;
   background-color: #2C3E50;
-  color: white;
-  height: 100vh;
+  color: #ffffff;
+  min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
-  transition: width 0.3s;
-  position: fixed;
+  transition: width 0.3s ease;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
 }
 
 .sidebar.collapsed {
-  width: 60px; /* Ancho cuando está colapsado */
+  width: 60px;
 }
 
 /* Estilos para pantallas pequeñas (móvil) */
 @media (max-width: 768px) {
   .sidebar {
-    width: 60px; /* Ancho fijo para móvil, sin importar el estado */
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    max-height: none;
+    width: 60px;
+    z-index: 1000;
   }
 
   .burger-btn {
-    display: none; /* Oculta el botón en móvil */
+    display: none;
   }
 
   .menu button span,
   .bottom-section button span {
-    display: none; /* Oculta los textos en móvil */
+    display: none;
   }
 }
 
@@ -126,16 +135,16 @@
 }
 
 .profile-menu {
-    position: absolute; /* <-- AGREGAR ESTO */
-    bottom: 100%; /* Posiciona el menú justo encima del botón, puedes cambiarlo a 'top' si lo prefieres debajo. */
-    left: 50%; /* Centra el menú horizontalmente */
-    transform: translateX(-50%); /* Ajusta la posición para un centrado perfecto */
-    background-color: #202d3b; /* Un color de fondo que se vea bien, puedes cambiarlo */
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    padding: 8px 0;
-    z-index: 100; /* Asegura que se vea por encima de otros elementos */
-    width: 114px; /* Ancho del menú desplegable */
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #202d3b;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 8px 0;
+  z-index: 100;
+  width: 114px;
 }
 
 .sidebar.collapsed .profile-menu {
@@ -143,23 +152,16 @@
   transform: translateX(0);
 }
 
-.sidebar.collapsed.profile-menu{
-left: 100%;
-
-}
-
-
-/* Estilos para el botón "Cerrar sesión" dentro del menú */
 .profile-menu button {
-    background: none;
-    border: none;
-    color: white;
-    padding: 3px 7px;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s, color 0.2s;
+  background: none;
+  border: none;
+  color: white;
+  padding: 3px 7px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .logo {
@@ -175,6 +177,4 @@ left: 100%;
 .sidebar.collapsed .profile-btn .logo {
   width: 40px;
   height: 40px;
-  
 }
-
