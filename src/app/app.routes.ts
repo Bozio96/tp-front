@@ -51,8 +51,8 @@ export const routes: Routes = [
           {
             path: 'add',
             component: ProductFormComponent,
-            canDeactivate: [PendingChangesGuard],
-            canActivate: [roleGuard],
+            canDeactivate: [PendingChangesGuard], //Si quiero salir 
+            canActivate: [roleGuard], //Si quiero entrar
             data: { role: 'admin' }
           },
           {

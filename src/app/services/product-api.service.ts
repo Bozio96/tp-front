@@ -1,4 +1,3 @@
-// product-api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/product.model';
@@ -8,7 +7,7 @@ import { BulkUpdateResponse, DataItem, EntityType } from './product-types';
 
 @Injectable({ providedIn: 'root' })
 export class ProductApiService {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  private readonly baseUrl = 'http://localhost:3000/api'; // Esto mejor en un archivo .env
   private readonly productsUrl = `${this.baseUrl}/products`;
 
   constructor(private http: HttpClient) {}

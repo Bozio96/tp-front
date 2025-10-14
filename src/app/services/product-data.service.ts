@@ -1,4 +1,3 @@
-// src/app/services/product-data.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -21,7 +20,7 @@ export class ProductDataService {
       case 'suppliers':
         return this.getSuppliers();
       default:
-        console.error('Tipo de entidad no válido:', type);
+        console.error('Tipo de entidad no vï¿½lido:', type);
         return of([]);
     }
   }
@@ -47,7 +46,7 @@ export class ProductDataService {
   getCategories(): Observable<DataItem[]> {
     return this.api.getCategories().pipe(
       catchError((error) => {
-        console.error('Error al cargar categorías', error);
+        console.error('Error al cargar categorï¿½as', error);
         return of([]);
       })
     );

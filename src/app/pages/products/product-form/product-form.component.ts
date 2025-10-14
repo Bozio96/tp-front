@@ -18,7 +18,7 @@ import { DataItem } from '../../../services/product-types';
 import { Product } from '../../../models/product.model';
 import { take } from 'rxjs';
 
-// Validador personalizado que comprueba si un valor existe en una lista de opciones.
+// Validador personalizado que comprueba si un valor existe en una lista de opciones. En este caso los supliers
 function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const inputValue = control.value;
@@ -37,7 +37,7 @@ function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
     // Devolvemos un error 'valueNotExists' si no se encuentra.
     return valueExists ? null : { valueNotExists: true };
   };
-}
+} //¿Esto no debería estar con los demás métodos debajo?
 
 @Component({
   selector: 'app-product-form',
@@ -47,7 +47,7 @@ function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
   styleUrls: ['./product-form.component.css'],
 })
 export class ProductFormComponent implements OnInit, OnDestroy {
-  @HostListener('window:beforeunload', ['$event'])
+  @HostListener('window:beforeunload', ['$event']) //Si intenta cerrar sin confirmar
   unloadNotification($event: any): void {
     if (this.productForm && this.productForm.dirty) {
       $event.returnValue = true;
@@ -65,7 +65,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   availableCategories: DataItem[] = [];
   availableSuppliers: DataItem[] = [];
 
-  readonly IVA_RATE = 0.21;
+  readonly IVA_RATE = 0.21; //Podría ir en un archivo de constantes
   private isCalculating = false;
   isLoading = false;
 
@@ -106,7 +106,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.notifications.showError('No se encontr� el producto solicitado.');
+          this.notifications.showError('No se encontr� el producto solicitado.');
           this.isLoading = false;
           this.router.navigate(['/products']);
         },
@@ -198,14 +198,14 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       .get('finalCost')
       ?.setValue(this.round(finalCost), { emitEvent: false });
   }
-  get netCost(): number {
+  get netCost(): number { //Calcula el neto
     const costBase = Number(this.productForm.get('costBase')?.value) || 0;
     const discounts = Number(this.productForm.get('discounts')?.value) || 0;
     // Si discounts es 0, no hay descuento. Si es > 0, se interpreta como porcentaje.
     return costBase - (costBase * discounts / 100);
   }
 
-  get finalCost(): number {
+  get finalCost(): number { //Calcula el final en base al neto y al iva
     let final = this.netCost;
     if (this.productForm.get('includeIVA')?.value) {
       final += final * this.IVA_RATE;
@@ -213,7 +213,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     return final;
   }
 
-  onCostRelatedChange(): void {
+  onCostRelatedChange(): void { //Calcula el precio de venta y el porcentaje a la par
     if (this.isCalculating) return;
     this.isCalculating = true;
     const utilityPercentage = this.productForm.get('utilityPercentage')?.value;
@@ -226,14 +226,14 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     this.isCalculating = false;
   }
 
-  onUtilityPercentageChange(): void {
+  onUtilityPercentageChange(): void { //Si cambia el porcentaje, se cambia el precio de venta
     if (this.isCalculating) return;
     this.isCalculating = true;
     this.calculateSalePriceFromUtilityPercentage();
     this.isCalculating = false;
   }
 
-  onSalePriceChange(): void {
+  onSalePriceChange(): void { //Si cambia el precio de venta, se cambia la utilidad
     if (this.isCalculating) return;
     this.isCalculating = true;
     this.calculateUtilityPercentageFromSalePrice();
@@ -272,7 +272,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       });
   }
 
-  private round(num: number, decimalPlaces: number = 2): number {
+  private round(num: number, decimalPlaces: number = 2): number { //Redondeador
     const factor = Math.pow(10, decimalPlaces);
     return Math.round(num * factor) / factor;
   }
@@ -280,7 +280,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   onSave(): void {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
-      this.notifications.showError('Revis� los campos obligatorios antes de guardar.');
+      this.notifications.showError('Revis� los campos obligatorios antes de guardar.');
       return;
     }
 
@@ -299,6 +299,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       request$ = this.productService.updateProduct(id, productToSave);
     } else {
       request$ = this.productService.addProduct(productToSave as Product);
+      console.log("🚀 ~ product-form.component.ts:302 ~ ProductFormComponent ~ onSave ~ request$:", request$)
     }
 
     request$.subscribe({
@@ -322,11 +323,11 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       },
     });
   }
-  private prepareProductPayload(): Partial<Product> {
-    const raw = this.productForm.getRawValue();
+  private prepareProductPayload(): Partial<Product> { 
+    const raw = this.productForm.getRawValue(); 
     const product: Record<string, any> = { ...raw };
 
-    const toNumber = (value: unknown): number | undefined => {
+    const toNumber = (value: unknown): number | undefined => { //Conversor a tipo number
       if (value === null || value === undefined || value === '') {
         return undefined;
       }
@@ -334,12 +335,12 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       return Number.isFinite(parsed) ? parsed : undefined;
     };
 
-    const toInteger = (value: unknown): number | undefined => {
+    const toInteger = (value: unknown): number | undefined => { // Conversor a tipo integer
       const parsed = toNumber(value);
       return parsed !== undefined ? Math.trunc(parsed) : undefined;
     };
 
-    const decimalFields: Array<keyof Product> = [
+    const decimalFields: Array<keyof Product> = [ 
       'price',
       'costBase',
       'discounts',
@@ -398,6 +399,8 @@ export class ProductFormComponent implements OnInit, OnDestroy {
 
     return product;
   }
+
+  //Manejo de errores genérico
   private getErrorMessage(error: unknown, fallback: string): string {
     const backendMessage = (error as any)?.error?.message;
     if (typeof backendMessage === 'string' && backendMessage.trim().length > 0) {

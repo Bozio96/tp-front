@@ -21,10 +21,12 @@ interface JwtPayload {
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private apiUrl = 'http://localhost:3000'; //Url backend
+  private currentUserSubject = new BehaviorSubject<User | null>(null); //Almacena el usuario, es como un estado
+  public currentUser$ = this.currentUserSubject.asObservable(); //Cualquiera puede ver esto(suscribirse), PERO NO EDITARLO
+  //El $ al final es por convención que es solo lectura
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
@@ -35,8 +37,10 @@ export class AuthService {
   }
 
   login(credentials: {username: string, password: string}): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe( 
+      //El pipe permite encadenar operadores (tap en este caso) que emite el Observable 
       tap(response => {
+      //El tap permite realizar efectos secundarios (useEffect en React)
         localStorage.setItem('access_token', response.access_token);
         const decodedToken = jwtDecode<JwtPayload>(response.access_token);
         const user: User = {
@@ -64,7 +68,7 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken();
+    return !!this.getToken(); //Comprueba si existe un token o no 
   }
 
   getCurrentUser(): User | null {

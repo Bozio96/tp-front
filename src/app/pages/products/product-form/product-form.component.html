@@ -1,7 +1,9 @@
 <div class="edit-container">
   <h2>{{ isEditing ? "Editar Producto" : "Agregar Nuevo Producto" }}</h2>
 
-  <form [formGroup]="productForm" (ngSubmit)="onSave()">
+  <form [formGroup]="productForm" (ngSubmit)="onSave()"> <!--Se vincula con el formGroup creado en el ts-->
+    <!-- Cuando el formulario se envia (ngSubmit) se ejecuta el método onSave() -->
+
     <!-- Datos del Producto -->
     <div class="section">
       <h3>Datos del Producto</h3>
@@ -41,7 +43,7 @@
               productForm.get('supplier')?.touched
             "
             class="error-message"
-          >
+          > <!--el .touched hace que el error se muestre después de que el usuario interactúe con el campo-->
             El proveedor ingresado no existe.
           </div>
         </div>
@@ -163,7 +165,9 @@
           type="text"
           [value]="netCost | number : '1.2-2'"
           disabled
-        />
+        /> 
+        <!--Deshabilitado porque no se puede editar manualmente-->
+        <!--[value]="netCost" es el get netCost del ts, lo que le da el valor -->
       </div>
 
       <div class="form-group">
@@ -232,6 +236,7 @@
     <!-- Botones -->
     <div class="form-actions">
       <button type="submit" class="save-btn" [disabled]="productForm.invalid">
+        <!-- [disabled]="productForm.invalid" Deshabilitado si cualquier campo requerido es no valido -->
         {{ isEditing ? "Guardar Cambios" : "Guardar" }}
       </button>
       <button type="button" class="cancel-btn" (click)="onCancel()">

@@ -57,8 +57,7 @@ export class ClientFormComponent implements OnInit {
       dni: ['', [Validators.required, Validators.pattern('^[0-9]{8}$')]],
       cuil: ['', [Validators.required, Validators.pattern('^[0-9]{11}$')]],
       telefono: ['', Validators.required],
-      domicilio: ['', Validators.required],
-      foto: [''],
+      domicilio: ['', Validators.required]
     });
   }
 
@@ -85,6 +84,7 @@ export class ClientFormComponent implements OnInit {
         error: (err) => console.error('Error al actualizar el cliente:', err),
       });
     } else {
+      console.log("🚀 ~ client-form.component.ts:88 ~ ClientFormComponent ~ onSave ~ clientData:", clientData)
       this.clientService.addClient(clientData).subscribe({
         next: () => this.router.navigate(['/clients']),
         error: (err) => console.error('Error al agregar el cliente:', err),

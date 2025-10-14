@@ -3,7 +3,7 @@
     [searchTerm]="searchTerm"
     (searchTermChange)="onSearchTermChanged($event)"
     [showSearch]="true"
-    [showAddButton]="authService.hasRole('admin')"
+    [showAddButton]="authService.hasRole('admin')"  
     [addLabel]="'Agregar Producto'"
     (addClicked)="onAddClick()"
   ></app-data-toolbar>
@@ -15,6 +15,7 @@ filter_alt
   </button>
 </div>
 
+<!-- Busqueda avanzada, solo si en el ts showAdvancedSearch es true -->
 <div
   *ngIf="showAdvancedSearch"
   class="advanced-search-form"
@@ -81,6 +82,7 @@ filter_alt
   </div>
 </div>
 
+
 <div class="products-container">
   <div *ngIf="loading" class="loading">
     <div class="spinner"></div>
@@ -104,11 +106,15 @@ filter_alt
         </tr>
       </thead>
       <tbody>
+        <!-- Cada producto -->
         <tr *ngFor="let product of filteredProducts">
           <td>{{product.sku}}</td>
           <td>{{ product.name }}</td>
           <td>{{ product.stock }}</td>
-          <td>{{ product.price | currency : "$" : "symbol" : "1.2-2" }}</td>
+          <td>{{ product.price | currency : "$" : "symbol" : "1.2-2" }}</td> 
+          <!--Currency es un pipe de Angular para formatear monedas-->
+
+          <!-- Botón del menú desplegable por producto -->
           <td class="action-cell" *ngIf="authService.hasRole('admin')">
             <div class="action-container" #actionContainer>
               <button
@@ -132,6 +138,7 @@ filter_alt
                 </svg>
               </button>
 
+              <!-- Menú desplegable por producto -->
               <div
                 *ngIf="menuProductId === product.id"
                 class="action-dropdown-menu"

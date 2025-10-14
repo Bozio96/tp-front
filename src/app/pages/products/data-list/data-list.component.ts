@@ -1,4 +1,3 @@
-// src/app/pages/products/data-list/data-list.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
