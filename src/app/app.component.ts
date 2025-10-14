@@ -1,4 +1,3 @@
-
 import { Component, HostListener, OnInit } from '@angular/core';
 import {CommonModule} from '@angular/common'
 import { Router, RouterOutlet } from '@angular/router';
@@ -13,17 +12,15 @@ import {SidebarComponent} from './components/sidebar/sidebar.component'
 })
 
 export class AppComponent implements OnInit {
-  title(title: any) {
+  /* title(title: any) {
     throw new Error('Method not implemented.');
-  }
-
-  // Inicializamos el estado del sidebar
+  } 
+ */
+  // Inicializamos el estado del sidebar como NO COLAPSADO (es decir visible)
   isSidebarCollapsed: boolean = false; 
 
   constructor(public router: Router) {
-    this.router.events.subscribe(event => {
- 
-    });
+    this.router.events.subscribe(event => {}); //Ver que significa esto
   }
 
   ngOnInit() {
@@ -33,7 +30,7 @@ export class AppComponent implements OnInit {
 
   // Escucha los cambios de tamaño de la ventana
   @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
+  onResize(event: any) { //Se ejecuta este método onResize cada vez que el tamaño de la ventana cambie
     this.checkScreenSize();
   }
 
@@ -42,7 +39,7 @@ export class AppComponent implements OnInit {
     this.isSidebarCollapsed = window.innerWidth <= 768;
   }
 
-  // Este método actualiza el estado, pero solo si no estamos en móvil
+  // Este método actualiza el estado, pero solo si no estamos en móvil (Se llama desde el componente Sidebar)
   onSidebarCollapsedChange(isCollapsed: boolean) {
     if (window.innerWidth > 768) {
       this.isSidebarCollapsed = isCollapsed;

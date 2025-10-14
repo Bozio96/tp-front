@@ -1,4 +1,3 @@
-// src/app/services/product-data.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -44,7 +43,10 @@ export class ProductDataService {
 
   getCategories(): Observable<DataItem[]> {
     return this.api.getCategories().pipe(
-      catchError(() => of([]))
+      catchError((error) => {
+        console.error('Error al cargar categor�as', error);
+        return of([]);
+      })
     );
   }
 

@@ -3,7 +3,7 @@
   (collapsedStateChange)="onSidebarCollapsedChange($event)"
 ></app-sidebar>
 
-<div class="main-content">
+<div class="main-content" [class.main-content-expanded]="isSidebarCollapsed"> <!-- La clase main-content-expanded se agrega cuando el sideBar está colapsado--> 
   <router-outlet></router-outlet>
+</div>
 
-  </div>

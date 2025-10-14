@@ -111,7 +111,7 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe((data) => (this.availableSuppliers = data));
   }
 
-  // Nuevo: Muestra/oculta el formulario de búsqueda avanzada
+  // Nuevo: Muestra/oculta el formulario de búsqueda avanzada (los filtros)
   toggleAdvancedSearch(): void {
     this.showAdvancedSearch = !this.showAdvancedSearch;
   }
@@ -163,7 +163,7 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
     this.applyFilters(); // Vuelve a aplicar los filtros (sin valores, mostrará todo)
   }
 
-  onSearchTermChanged(term: string): void {
+  onSearchTermChanged(term: string): void { //Se emite cuando el usuario escribe en la barra de búsqueda
     this.searchTerm = term;
     // Ya no usamos el Subject directamente, sino que aplicamos los filtros
     this.applyFilters();
@@ -182,11 +182,11 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
     this.searchTerms.complete();
   }
 
-  toggleMenu(productId: number) {
+  toggleMenu(productId: number) { //3 puntitos de opciones por producto
     this.menuProductId = this.menuProductId === productId ? null : productId;
   }
 
-  @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event']) //Cuando clickeas por fuera del mini menú de cada producto, este se cierra
   onDocumentClick(event: MouseEvent) {
     if (this.menuProductId !== null && this.actionContainers) {
       const clickedInside = this.actionContainers.some((container) =>
@@ -204,6 +204,8 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onDeleteClick(productId: number) {
+    //MEJORAS: En lugar de eliminarlo se podría hacer un update con un "eliminado=true" para no eliminarlo de la base de datos
+    //Luego traer solo los productos que tengan "eliminado=false"
     this.menuProductId = null;
     const confirmation = window.confirm(
       '¿Estás seguro de que quieres eliminar este producto?'

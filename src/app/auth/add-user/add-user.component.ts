@@ -23,7 +23,7 @@ export class AddUserComponent implements OnInit {
   userId: number | null = null;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: FormBuilder, //Inyecciones de dependencias
     private userService: UserService,
     private authService: AuthService,
     private route: ActivatedRoute,
@@ -39,7 +39,7 @@ export class AddUserComponent implements OnInit {
   ngOnInit(): void {
     this.roles = this.authService.getRoles();
     this.route.params.subscribe(params => {
-      if (params['id']) {
+      if (params['id']) { //Solo si detecta modo edición
         this.isEditMode = true;
         this.userId = +params['id'];
 
