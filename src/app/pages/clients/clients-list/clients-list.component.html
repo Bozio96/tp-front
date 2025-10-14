@@ -8,9 +8,9 @@
     [showSearch]="true"
     [showAddButton]="authService.hasRole('admin')"
     [addLabel]="'Agregar Cliente'"
-  >
-<!-- Faltan métodos, copiar de productos -->
-</app-data-toolbar>
+    (searchTermChange)="onSearchTermChanged($event)"
+    (addClicked)="onAddClick()"
+  ></app-data-toolbar>
 
 </div>
 
@@ -51,8 +51,8 @@
                 matTooltip="Acciones"
                 matTooltipPosition="after"
                 matTooltipClass="tooltip-arrow"
+                (click)="toggleMenu(client.id)"
               >
-                <!-- En el botón falta el método: (click)="toggleMenu(client.id)" -->
                 <svg
                   class="action-icon"
                   xmlns="http://www.w3.org/2000/svg"
@@ -71,10 +71,8 @@
                 *ngIf="menuClientId === client.id"
                 class="action-dropdown-menu"
               >
-                <button class="menu-option">Editar</button>
-                <!-- Falta en el boton este método:  (click)="onEditClick(client.id)" -->
-                <button class="menu-option delete-option">Eliminar</button>
-                <!-- Falta en el boton este método: (click)="onDeleteClick(client.id)" -->
+                <button class="menu-option" (click)="onEditClick(client.id)">Editar</button>
+                <button class="menu-option delete-option" (click)="onDeleteClick(client.id)">Eliminar</button>
               </div>
             </div>
           </td>
@@ -83,6 +81,3 @@
     </table>
   </div>
 </div>
-
-
-
