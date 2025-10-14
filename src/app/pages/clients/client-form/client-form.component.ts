@@ -3,7 +3,6 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
-import { Client } from '../client.model';
 import { NotificationService } from '../../../services/notification.service';
 import { Client } from '../../../models/client.model';
 
