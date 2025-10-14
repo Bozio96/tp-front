@@ -1,0 +1,247 @@
+<div class="header-clients">
+  <h2>Registro de venta</h2>
+</div>
+
+<div class="sales-container">
+  <form class="sales-form" [formGroup]="salesForm" (ngSubmit)="onSubmit()">
+
+    <!-- Datos generales -->
+<section class="card">
+  <h3>Datos generales de la venta</h3>
+
+  <div class="grid grid-4">
+    <!-- Fecha -->
+    <label class="field field--date">
+      <span>Fecha de la factura</span>
+      <input type="date" formControlName="invoiceDate" />
+      <small class="error" *ngIf="salesForm.get('invoiceDate')?.hasError('required')">
+        La fecha es obligatoria
+      </small>
+    </label>
+
+    <!-- Nro. de comprobante -->
+    <label class="field field--invoice">
+      <span>Nro. de comprobante</span>
+      <input type="text" formControlName="invoiceNumber" inputmode="numeric" [attr.placeholder]="invoicePreview" readonly>
+      <small class="preview-text">Próximo: {{ invoicePreview }}</small>
+    </label>
+
+    <!-- Medio de pago -->
+    <label class="field field--payment">
+      <span>Medio de pago</span>
+      <select formControlName="paymentMethod">
+        <option value="contado">Contado</option>
+        <option value="debito">Débito</option>
+        <option value="transferencia">Transferencia</option>
+        <option value="credito">Crédito</option>
+      </select>
+    </label>
+
+    <!-- Tipo de comprobante -->
+    <label class="field field--invoice-type">
+      <span>Tipo de comprobante</span>
+      <select formControlName="invoiceType">
+        <option value="B">Ticket Fiscal</option>
+        <option value="X">No Fiscal</option>
+      </select>
+    </label>
+  </div>
+
+  <!-- Tipo de cliente -->
+  <div class="radio-group">
+    <label>
+      <input type="radio" formControlName="customerType" value="habitual" /> Habitual
+    </label>
+    <label>
+      <input type="radio" formControlName="customerType" value="ocasional" /> Ocasional
+    </label>
+  </div>
+
+  <!-- Datos cliente -->
+  <div class="grid-compact">
+    <label class="field small field--id">
+      <span>ID</span>
+      <input type="number" formControlName="clientId" min="0" step="1" inputmode="numeric" />
+    </label>
+    <label class="field field--name">
+      <span>Nombre del cliente</span>
+      <input type="text" formControlName="customerName" />
+    </label>
+  </div>
+
+  <div class="grid-compact">
+    <label class="field small">
+      <span>CUIT</span>
+      <input type="text" formControlName="customerCuit" inputmode="numeric" pattern="[0-9]*" maxlength="11" />
+      <small class="error" *ngIf="salesForm.get('customerCuit')?.touched && salesForm.get('customerCuit')?.hasError('pattern')">
+        Ingrese 11 digitos validos
+      </small>
+    </label>
+    <label class="field small">
+      <span>DNI</span>
+      <input type="text" formControlName="customerDni" inputmode="numeric" pattern="[0-9]*" maxlength="8" />
+      <small class="error" *ngIf="salesForm.get('customerDni')?.touched && salesForm.get('customerDni')?.hasError('pattern')">
+        Ingrese 8 digitos validos
+      </small>
+    </label>
+  </div>
+
+  <div class="grid-compact">
+    <label class="field small">
+      <span>Domicilio</span>
+      <input type="text" formControlName="customerAddress" />
+    </label>
+    <label class="field small">
+      <span>Teléfono</span>
+      <input type="number" formControlName="customerPhone" min="0" step="1" inputmode="numeric" />
+    </label>
+  </div>
+</section>
+
+    <!-- Detalle de artículos -->
+   <section class="card">
+  <div class="header-row">
+    <h3>Detalle de artículos</h3>
+    <button type="button" class="primary-btn" (click)="openProductSelector()">
+      + Agregar item
+    </button>
+  </div>
+
+  <div formArrayName="items" class="table-wrapper">
+    <table class="items-table">
+      <thead>
+        <tr>
+          <th>SKU</th>
+          <th>Producto</th>
+          <th>Cant</th>
+          <th>Precio U.</th>
+          <th>Desc.</th>
+          <th>Subtotal</th>
+          <th>IVA</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+          <!-- SKU -->
+          <td>
+            <input type="text" formControlName="internalCode" readonly />
+          </td>
+
+          <!-- Producto -->
+          <td>
+            <input type="text" formControlName="description" readonly />
+          </td>
+
+          <!-- Cantidad -->
+          <td>
+            <input type="number" formControlName="quantity" min="1" />
+          </td>
+
+          <!-- Precio -->
+          <td>
+            <input type="number" formControlName="unitPrice" min="0" step="0.01" />
+          </td>
+
+          <!-- Descuento -->
+          <td>
+            <input type="number" formControlName="discountRate" min="0" max="100" step="0.01" />
+          </td>
+
+          <!-- Subtotal -->
+          <td>
+            {{ lineSummaries[i].net | number:'1.2-2' }}
+          </td>
+
+          <!-- IVA -->
+          <td>
+            {{ lineSummaries[i].iva | number:'1.2-2' }}
+          </td>
+
+          <!-- Total -->
+          <td>
+            {{ lineSummaries[i].total | number:'1.2-2' }}
+          </td>
+
+          <!-- Acción -->
+          <td>
+            <button type="button" class="delete-btn" (click)="removeItem(i)">
+              <span class="material-symbols-outlined">
+                      delete
+              </span>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+    <!-- Totales -->
+    <section class="card totals-card">
+      <div class="totals-grid">
+        <div class="total-row">
+          <span>Neto</span>
+          <span>{{ totals.net | number:'1.2-2' }}</span>
+        </div>
+        <div class="total-row">
+          <span>IVA</span>
+          <span>{{ totals.iva | number:'1.2-2' }}</span>
+        </div>
+        <div class="total-row">
+          <span>Desc.</span>
+          <span>{{ totals.discounts | number:'1.2-2' }}</span>
+        </div>
+        <div class="total-row total-final">
+          <span>Total</span>
+          <span>{{ totals.final | number:'1.2-2' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opciones -->
+    <section class="card actions-card">
+      <h3>Opciones</h3>
+      <div class="actions">
+        <button type="submit" class="primary-btn" [disabled]="isSubmissionBlocked()">Grabar</button>
+        <button type="button" class="secondary-btn" (click)="onCancel()">Cancelar</button>
+        <button type="button" class="primary-btn" (click)="onSaveAsQuote()" [disabled]="isSubmissionBlocked()">Grabar como presupuesto</button>
+      </div>
+    </section>
+
+    <!-- Selector de productos -->
+    <div *ngIf="isSelectorOpen" class="product-selector-backdrop" (click)="closeProductSelector()">
+      <div class="product-selector-panel" (click)="$event.stopPropagation()">
+        <div class="product-selector-header">
+          <h4>Seleccionar producto</h4>
+          <button type="button" class="secondary-btn" (click)="closeProductSelector()">Cerrar</button>
+        </div>
+        <div class="product-selector-search">
+          <input type="text" #productSearch [value]="searchTerm"
+                 (input)="onSearchProducts(productSearch.value)"
+                 placeholder="Buscar por nombre o SKU" autocomplete="off" />
+        </div>
+        <div class="product-selector-list" *ngIf="filteredProducts.length > 0; else emptySelectorList">
+          <div class="product-selector-item" *ngFor="let product of filteredProducts">
+            <div class="product-selector-info">
+              <span class="product-selector-name">{{ product.name }}</span>
+              <span class="product-selector-sku">SKU: {{ product.sku || 'Sin SKU' }}</span>
+              <span class="product-selector-stock">Stock: {{ getProductStock(product) }}</span>
+            </div>
+            <div class="product-selector-actions">
+              <span class="product-selector-price">
+                {{ getProductDisplayPrice(product) | currency:'$':'symbol':'1.2-2' }}
+              </span>
+              <button type="button" class="primary-btn" (click)="selectProduct(product)">Agregar</button>
+            </div>
+          </div>
+        </div>
+        <ng-template #emptySelectorList>
+          <div class="product-selector-empty">No se encontraron productos.</div>
+        </ng-template>
+      </div>
+    </div>
+  </form>
+</div>
+

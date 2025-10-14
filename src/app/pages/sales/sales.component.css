@@ -1,0 +1,453 @@
+﻿/* ====== Contenedor principal ====== */
+.sales-container {
+  max-width: 1300px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #f9fafb;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #2c3e50;
+}
+
+/* ====== Encabezado ====== */
+.header-clients {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header-clients h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* ====== Secciones ====== */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.sales-container .field--fh {
+  flex: 1 1 120px;
+  max-width: 500px;
+
+}
+
+
+.card h3 {
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ====== Grillas ====== */
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.grid-compact {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.grid-compact .field {
+  flex: 1;            /* ambos crecen igual */
+  max-width: 300px;   /* límite de ancho */
+}
+
+.grid-3 .field--date {
+  max-width: 180px;
+  justify-self: start;
+}
+
+.grid-3 .field--date input {
+  width: 100%;
+}
+
+.grid-3 .field--invoice {
+  max-width: 220px;
+}
+
+.grid-3 .field--invoice input {
+  width: 100%;
+}
+
+.grid-compact .field--id {
+  flex: 0 0 100px;
+  max-width: 110px;
+}
+
+.grid-compact .field--name {
+  flex: 1 1 120px;
+  max-width: 500px;
+}
+
+
+.grid-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.grid-4 .field--invoice-type {
+  max-width: 220px;
+}
+
+.grid-4 .field--invoice-type select {
+  width: 100%;
+}
+
+
+
+
+/* ====== Inputs ====== */
+.field--name input {
+  max-width: 100%;
+}
+
+.field.small input {
+  max-width: 250px;  /* límite de ancho */
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field span {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  color: #334155;
+}
+
+.field input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.field select {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: #ffffff;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+.preview-text {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.35rem;
+}
+
+.field input[readonly] {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+}
+
+/* ====== Checkbox y radio ====== */
+.checkbox, .radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.radio-group {
+  display: flex;
+  gap: 1rem; /* separa cada opción */
+  margin-top: 0.5rem;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  accent-color: #2563eb;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* ====== Tabla ====== */
+.table-wrapper {
+  width: 100%;
+  overflow-x: hidden; /* sin scroll horizontal */
+}
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  table-layout: fixed; /* 🔑 fuerza proporción */
+}
+
+.items-table th,
+.items-table td {
+  padding: 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.items-table th {
+  background: #f1f5f9;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Reparto proporcional */
+.items-table th:nth-child(1),
+.items-table td:nth-child(1) { width: 12%; text-align: center; } /* SKU */
+
+.items-table th:nth-child(2),
+.items-table td:nth-child(2) { width: 28%; } /* Producto */
+
+.items-table th:nth-child(3),
+.items-table td:nth-child(3) { width: 8%; text-align: center; } /* Cantidad */
+
+.items-table th:nth-child(4),
+.items-table td:nth-child(4) { width: 12%; text-align: right; } /* Precio U. */
+
+.items-table th:nth-child(5),
+.items-table td:nth-child(5) { width: 8%; text-align: center; } /* Desc. */
+
+.items-table th:nth-child(6),
+.items-table td:nth-child(6) { width: 12%; text-align: right; } /* Subtotal */
+
+.items-table th:nth-child(7),
+.items-table td:nth-child(7) { width: 10%; text-align: right; } /* IVA */
+
+.items-table th:nth-child(8),
+.items-table td:nth-child(8) { width: 11%; text-align: right; } /* Total */
+
+.items-table th:nth-child(9),
+.items-table td:nth-child(9) { width: 6%; text-align: center; } /* Acción */
+
+/* Inputs dentro de celdas */
+.items-table input {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Botón eliminar */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+.delete-btn:hover {
+  color: #b91c1c;
+}
+
+/* ====== Totales ====== */
+.totals-grid {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1rem;
+  color: #475569;
+}
+
+.total-final {
+  font-weight: 700;
+  color: #111827;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 0.5rem;
+}
+
+/* ====== Botones ====== */
+button {
+  cursor: pointer;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.6rem 1.2rem;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.header-row .primary-btn {
+  margin-bottom: 0.5rem; /* separa botón de la tabla */
+}
+.actions {
+  display: flex;
+  gap: 1rem; /* separa los botones */
+  flex-wrap: wrap; /* por si no entran en pantallas chicas */
+}
+
+.primary-btn {
+  background: #F39C12;
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #D35400;
+}
+
+.secondary-btn {
+  background-color: #ccc; /* Light gray */
+  color: #333;
+}
+
+.secondary-btn:hover {
+    background-color: #999;
+}
+
+.outline-btn {
+  background: #F39C12;
+  color: #ffffff;
+}
+
+.outline-btn:hover {
+  background: #eff6ff;
+}
+
+/* ====== Product Selector ====== */
+.product-selector-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-selector-panel {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.product-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.product-selector-search input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.product-selector-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.product-selector-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.product-selector-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.product-selector-price {
+  font-weight: 600;
+  color: #000000;
+}
+
+/* ====== Errores ====== */
+.error {
+  font-size: 0.8rem;
+  color: #dc2626;
+  margin-top: 0.3rem;
+}
+
+/* Eliminar flechas en inputs type=number (Chrome, Safari, Edge) */
+.field input[type=number]::-webkit-inner-spin-button,
+.field input[type=number]::-webkit-outer-spin-button,
+.items-table input[type=number]::-webkit-inner-spin-button,
+.items-table input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Eliminar flechas en Firefox */
+.field input[type=number],
+.items-table input[type=number] {
+  -moz-appearance: textfield;
+  appearance: none;
+}
+.items-table input[type="text"] {
+  text-align: left;
+}
+
+.items-table input[type="number"] {
+  text-align: right;
+}
+
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .grid-compact, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+.grid-3 .field--payment {
+  max-width: 220px;
+}
+
+.grid-3 .field--payment select {
+  width: 100%;
+}

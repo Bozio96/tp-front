@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../models/user.model';
+import { NotificationService } from './notification.service';
 
 export interface LoginResponse {
   access_token: string;
@@ -29,7 +30,11 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private notifications: NotificationService
+  ) {
     this.loadUserFromToken();
     this.isLoggedInSubject.next(this.isLoggedIn());
   }
@@ -94,7 +99,7 @@ export class AuthService {
         this.isLoggedInSubject.next(true);
         console.log('Usuario cargado desde el token.');
       } catch (error) {
-        console.error('Error decodificando el token:', error);
+        this.notifications.showError('No se pudo validar tu sesión, por favor vuelve a iniciar sesión.');
         this.logout();
       }
     }

@@ -139,10 +139,15 @@
 }
 
 .sidebar.collapsed .profile-menu {
-  left: 100%;
+  left: calc(50% + 10px);
   transform: translateX(0);
-  margin-left: 10px; /* Opcional: para dar un pequeño espacio */
 }
+
+.sidebar.collapsed.profile-menu{
+left: 100%;
+
+}
+
 
 /* Estilos para el botón "Cerrar sesión" dentro del menú */
 .profile-menu button {
@@ -157,5 +162,19 @@
     transition: background-color 0.2s, color 0.2s;
 }
 
-/*.profile-menu button:hover {
-    background-color: #303f9f; /* Color al pasar el mouse */
+.logo {
+  width: 50px;
+  height: 50px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  border-radius: 50%;
+  transition: width 0.2s ease, height 0.2s ease;
+}
+
+.sidebar.collapsed .profile-btn .logo {
+  width: 40px;
+  height: 40px;
+  
+}
+

@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Subscription } from 'rxjs';
 
-import { ProductDataService } from '../../../services/product-data.service'; // Ruta corregida
+import { ProductDataService } from '../../../services/product-data.service';
+import { NotificationService } from '../../../services/notification.service'; // Ruta corregida
 import { DataItem, EntityType } from '../../../services/product-types'; // Ruta corregida
 import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
 import { AuthService } from '../../../services/auth.service';
@@ -35,6 +36,7 @@ export class DataListComponent implements OnInit, OnDestroy {
     private productDataService: ProductDataService,
     private router: Router,
     private route: ActivatedRoute,
+    private notifications: NotificationService,
     public authService: AuthService // <-- Agregado: Inyección de AuthService
   ) {}
 
@@ -94,8 +96,8 @@ export class DataListComponent implements OnInit, OnDestroy {
         this.filterItems();
         this.loading = false;
       },
-      (error: any) => {
-        console.error(`Error al obtener los ${this.pageTitle}:`, error);
+      () => {
+        this.notifications.showError(`No se pudieron obtener los ${this.pageTitle}.`);
         this.loading = false;
       }
     );
@@ -146,10 +148,9 @@ export class DataListComponent implements OnInit, OnDestroy {
           }
           this.menuItemId = null;
         },
-        error: (error: any) => {
-          console.error(
-            `Error al eliminar el ${this.pageTitle.slice(0, -1)}:`,
-            error
+        error: () => {
+          this.notifications.showError(
+            `No se pudo eliminar el ${this.pageTitle.slice(0, -1)}.`
           );
           this.menuItemId = null;
         },

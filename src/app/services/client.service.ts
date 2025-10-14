@@ -10,10 +10,7 @@ export class ClientService {
 
   getAllClients(): Observable<Client[]> {
     return this.api.getAllClients().pipe(
-      catchError(error => {
-        console.error('Error al cargar clientes', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
@@ -27,20 +24,14 @@ export class ClientService {
         c.apellido.toLowerCase().includes(term.toLowerCase()) ||
         c.dni.toLowerCase().includes(term.toLowerCase())
       )),
-      catchError(error => {
-        console.error('Error al buscar clientes', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getClientById(id: number): Observable<Client | undefined> {
     return this.api.getClientById(id).pipe(
       map(client => client),
-      catchError(error => {
-        console.error(`Error al obtener cliente con ID ${id}`, error);
-        return of(undefined);
-      })
+      catchError(() => of(undefined))
     );
   }
 
@@ -52,30 +43,21 @@ export class ClientService {
 
   addClient(newClient: Client): Observable<Client> {
     return this.api.createClient(newClient).pipe(
-      catchError(error => {
-        console.error('Error al agregar cliente', error);
-        return of(newClient);
-      })
+      catchError(() => of(newClient))
     );
   }
 
   updateClient(updatedClient: Client): Observable<Client> {
     return this.api.updateClient(updatedClient).pipe(
       map(client => client),
-      catchError(error => {
-        console.error('Error al actualizar cliente', error);
-        return of(updatedClient);
-      })
+      catchError(() => of(updatedClient))
     );
   }
 
   deleteClient(id: number): Observable<boolean> {
     return this.api.deleteClient(id).pipe(
       map(() => true),
-      catchError(error => {
-        console.error(`Error al eliminar cliente con ID ${id}`, error);
-        return of(false);
-      })
+      catchError(() => of(false))
     );
   }
 }

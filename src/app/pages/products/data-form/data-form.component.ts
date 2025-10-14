@@ -1,4 +1,4 @@
-﻿import { HostListener, OnDestroy } from '@angular/core';
+import { HostListener, OnDestroy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -73,7 +73,7 @@ export class DataFormComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       } else {
-        console.error('Tipo de entidad no válido en la URL:', typeParam);
+        this.notifications.showError('Tipo de entidad no válido en la URL.');
         this.router.navigate(['/not-found']);
       }
     });
@@ -94,16 +94,12 @@ export class DataFormComponent implements OnInit, OnDestroy {
           this.dataForm.patchValue(item);
           this.dataForm.markAsPristine();
           this.dataForm.markAsUntouched();
-        } else {
-          console.error('Ítem no encontrado:', id, 'para tipo:', this.entityType);
-          this.notifications.showError('No se encontró el registro solicitado.');
+        } else {          this.notifications.showError('No se encontró el registro solicitado.');
           this.router.navigate(['/products', this.entityType]);
         }
         this.isLoading = false;
       },
-      (error) => {
-        console.error('Error al cargar ítem:', error);
-        this.notifications.showError(this.getErrorMessage(error, 'No se pudo cargar el registro.'));
+      (error) => {        this.notifications.showError(this.getErrorMessage(error, 'No se pudo cargar el registro.'));
         this.isLoading = false;
         this.router.navigate(['/products', this.entityType]);
       },
@@ -149,9 +145,7 @@ export class DataFormComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         this.router.navigate(['/products', this.entityType]);
       },
-      error: (error) => {
-        console.error('Error al guardar el ítem:', error);
-        this.notifications.showError(this.getErrorMessage(error, 'No se pudo guardar el registro.'));
+      error: (error) => {        this.notifications.showError(this.getErrorMessage(error, 'No se pudo guardar el registro.'));
         this.isLoading = false;
       },
     });

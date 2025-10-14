@@ -15,100 +15,67 @@ export class ProductApiService {
 
   getAllProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.productsUrl).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener productos:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${this.productsUrl}/${id}`).pipe(
-      catchError(error => {
-        console.error(`API - Error al obtener producto ${id}:`, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   createProduct(product: Product): Observable<Product> {
     return this.http.post<Product>(this.productsUrl, product).pipe(
-      catchError(error => {
-        console.error('API - Error al crear producto:', error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   updateProduct(id: number, payload: Partial<Product>): Observable<Product> {
     return this.http.put<Product>(`${this.productsUrl}/${id}`, payload).pipe(
-      catchError(error => {
-        console.error(`API - Error al actualizar producto ${id}:`, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   deleteProduct(id: number): Observable<void> {
     return this.http.delete<void>(`${this.productsUrl}/${id}`).pipe(
-      catchError(error => {
-        console.error(`API - Error al eliminar producto ${id}:`, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   bulkUpdateProducts(products: any[]): Observable<BulkUpdateResponse> {
     return this.http.patch<BulkUpdateResponse>(`${this.productsUrl}/bulk-update`, products).pipe(
-      catchError(error => {
-        console.error('API - Error en actualizacion masiva:', error);
-        return of({ success: false });
-      })
+      catchError(() => of({ success: false }))
     );
   }
 
   getBrands(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/brands`).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener marcas:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getDepartments(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/departments`).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener departamentos:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getCategories(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/categories`).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener categorias:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getSuppliers(): Observable<DataItem[]> {
     return this.http.get<DataItem[]>(`${this.baseUrl}/suppliers`).pipe(
-      catchError(error => {
-        console.error('API - Error al obtener proveedores:', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getItemById(type: EntityType, id: number): Observable<DataItem> {
     return this.http.get<DataItem>(`${this.baseUrl}/${type}/${id}`).pipe(
-      catchError(error => {
-        console.error(`API - Error al obtener ${type} ${id}:`, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ClientService } from '../../../services/client.service';
+import { Client } from '../client.model';
+import { NotificationService } from '../../../services/notification.service';
 import { Client } from '../../../models/client.model';
 
 @Component({
@@ -27,7 +29,8 @@ export class ClientFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private clientService: ClientService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notifications: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -42,8 +45,8 @@ export class ClientFormComponent implements OnInit {
             this.clientForm.patchValue(client);
           }
         },
-        error: (err) => {
-          console.error('Error al obtener el cliente:', err);
+        error: () => {
+          this.notifications.showError('No se pudo cargar el cliente.');
           this.router.navigate(['/not-found']);
         },
       });
@@ -82,12 +85,16 @@ export class ClientFormComponent implements OnInit {
       clientData.id = +id;
       this.clientService.updateClient(clientData).subscribe({
         next: () => this.router.navigate(['/clients']),
-        error: (err) => console.error('Error al actualizar el cliente:', err),
+        error: () => {
+          this.notifications.showError('No se pudo actualizar el cliente.');
+        },
       });
     } else {
       this.clientService.addClient(clientData).subscribe({
         next: () => this.router.navigate(['/clients']),
-        error: (err) => console.error('Error al agregar el cliente:', err),
+        error: () => {
+          this.notifications.showError('No se pudo agregar el cliente.');
+        },
       });
     }
   }

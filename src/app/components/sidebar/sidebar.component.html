@@ -59,7 +59,7 @@
     </button>
 
     <button
-      routerLink="/ventas"
+      routerLink="/sales"
       [class.collapsed]="isCollapsed"
       matTooltip="Ventas"
       matTooltipPosition="right"
@@ -82,7 +82,7 @@
   <div class="bottom-section">
     <button class="profile-btn" (click)="toggleProfileMenu()">
       @if (isLoggedIn$ | async) {
-        <img src="https://placehold.co/30x30/007bff/ffffff?text=LOGO" alt="Logo de la empresa" class="company-logo" />
+         <img src="assets/logo.png" alt="Logo" class="logo" />
       } @else {
         <svg class="profile-icon" viewBox="0 0 512 512" width="30" height="30">
           <path
