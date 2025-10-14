@@ -1,9 +1,8 @@
-// client-api.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs'; //Mejor capturar de otra forma el error en vez de un of
 import { catchError } from 'rxjs/operators';
-import { Client } from '../pages/clients/client.model';
+import { Client } from '../models/client.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClientApiService {
@@ -42,3 +41,5 @@ export class ClientApiService {
     );
   }
 }
+
+//Ver el getItem, saveItem y deleteItem
