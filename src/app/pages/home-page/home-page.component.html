@@ -1,3 +1,82 @@
-<div class="home-container">
-  <img src="assets/logo.png" alt="Logo" class="logo" />
+<div class="dashboard-container">
+  <!-- ====== TARJETAS ====== -->
+  <div class="cards-container">
+    <div class="card">
+      <h4>Total Vendido (mes actual)</h4>
+      <p class="value">${{ cards.totalVendido | number: '1.0-2' }}</p>
+    </div>
+
+    <div class="card">
+      <h4>Presupuestos Emitidos</h4>
+      <p class="value">{{ cards.presupuestos }}</p>
+    </div>
+
+    <div class="card">
+      <h4>Productos Vendidos</h4>
+      <p class="value">{{ cards.productosVendidos | number: '1.0'}}</p>
+    </div>
+  </div>
+
+  <!-- ====== GRÁFICOS ====== -->
+  <div class="charts-container">
+    <div class="chart-card">
+      <h3>Ventas Mensuales</h3>
+      <canvas
+        baseChart
+        [data]="{
+          labels: ventasMensualesLabels,
+          datasets: [{ data: ventasMensualesData, label: 'Ventas Mensuales', backgroundColor: '#3498db' }]
+        }"
+        [type]="'bar'"
+      ></canvas>
+    </div>
+
+    <div class="chart-card pie-chart">
+      <h3>Distribución Operaciones</h3>
+      <canvas
+        baseChart
+        [data]="{
+          labels: distribucionLabels,
+          datasets: [{ data: distribucionData, backgroundColor: ['#27ae60', '#f1c40f'] }]
+        }"
+        [type]="'pie'"
+        width="220"
+        height="220"
+        [options]="pieChartOptions"
+      ></canvas>
+    </div>
+
+    <div class="chart-card">
+      <h3>Ventas Diarias (últimos 30 días)</h3>
+      <canvas
+        baseChart
+        [data]="{
+          labels: ventasDiariasLabels,
+          datasets: [
+            { data: ventasDiariasData, label: 'Total Diario', fill: true, borderColor: '#e67e22', backgroundColor: 'rgba(230,126,34,0.3)' }
+          ]
+        }"
+        [type]="'line'"
+      ></canvas>
+    </div>
+  </div>
+
+  <!-- ====== TOP PRODUCTOS ====== -->
+  <div class="card-table">
+    <h3>Top 5 productos más vendidos</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of productosTop">
+          <td>{{ p.producto }}</td>
+          <td>{{ p.cantidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

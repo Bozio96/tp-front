@@ -3,11 +3,14 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    provideHttpClient()
+    provideHttpClient(),
+     provideCharts(withDefaultRegisterables())
   ]
 }).catch(err => {
   const message = 'No se pudo iniciar la aplicación. Inténtalo nuevamente más tarde.';
