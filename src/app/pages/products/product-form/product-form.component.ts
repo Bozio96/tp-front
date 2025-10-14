@@ -106,12 +106,11 @@ export class ProductFormComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.notifications.showError('No se encontr� el producto solicitado.');
+          this.notifications.showError('No se encontro el producto solicitado.');
           this.isLoading = false;
           this.router.navigate(['/products']);
         },
         error: (err) => {
-          console.error('Error al obtener el producto:', err);
           this.notifications.showError(this.getErrorMessage(err, 'No se pudo cargar el producto.'));
           this.isLoading = false;
           this.router.navigate(['/products']);
@@ -120,10 +119,30 @@ export class ProductFormComponent implements OnInit, OnDestroy {
     }
     this.productDataService.getSuppliers().subscribe((data) => {
       this.availableSuppliers = data;
-      this.productForm
-        .get('supplier')
-        ?.setValidators(valueExistsValidator(this.availableSuppliers));
-      this.productForm.get('supplier')?.updateValueAndValidity();
+      const control = this.productForm.get('supplier');
+      control?.setValidators(valueExistsValidator(this.availableSuppliers));
+      control?.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.productDataService.getBrands().subscribe((data) => {
+      this.availableBrands = data;
+      const control = this.productForm.get('brand');
+      control?.setValidators(valueExistsValidator(this.availableBrands));
+      control?.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.productDataService.getCategories().subscribe((data) => {
+      this.availableCategories = data;
+      const control = this.productForm.get('category');
+      control?.setValidators(valueExistsValidator(this.availableCategories));
+      control?.updateValueAndValidity({ emitEvent: false });
+    });
+
+    this.productDataService.getDepartments().subscribe((data) => {
+      this.availableDepartments = data;
+      const control = this.productForm.get('department');
+      control?.setValidators(valueExistsValidator(this.availableDepartments));
+      control?.updateValueAndValidity({ emitEvent: false });
     });
   }
     // Método requerido por el guard para evitar salir con cambios no guardados
@@ -314,7 +333,6 @@ export class ProductFormComponent implements OnInit, OnDestroy {
         this.router.navigate(['/products']);
       },
       error: (err) => {
-        console.error('Error al guardar el producto:', err);
         const fallback = this.isEditing
           ? 'No se pudo actualizar el producto.'
           : 'No se pudo agregar el producto.';

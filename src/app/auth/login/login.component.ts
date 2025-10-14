@@ -1,4 +1,4 @@
-// src/app/components/login/login.component.ts
+// src/app/auth/login/login.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service'; // La ruta cambió
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -36,6 +37,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private notifications = inject(NotificationService);
 
   constructor() {
     this.loginForm = this.fb.group({
@@ -56,10 +58,10 @@ export class LoginComponent {
           // Si el login es exitoso (recibimos token), redirigimos a la página principal
           this.router.navigate(['/']);
         },
-        error: (err) => {
+        error: () => {
           this.loading = false;
           this.errorMessage = 'Usuario o contraseña incorrectos.';
-          console.error('Login fallido:', err);
+          this.notifications.showError('Usuario o contraseña incorrectos.');
         }
       });
     }

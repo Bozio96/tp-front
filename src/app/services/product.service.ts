@@ -10,10 +10,7 @@ export class ProductService {
 
   getAllProducts(): Observable<Product[]> {
     return this.api.getAllProducts().pipe(
-      catchError(error => {
-        console.error('Error al cargar productos', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
@@ -26,19 +23,13 @@ export class ProductService {
       map(products =>
         products.filter(p => p.name.toLowerCase().includes(term.toLowerCase()))
       ),
-      catchError(error => {
-        console.error('Error al buscar productos', error);
-        return of([]);
-      })
+      catchError(() => of([]))
     );
   }
 
   getProductById(id: number): Observable<Product> {
     return this.api.getProductById(id).pipe(
-      catchError(error => {
-        console.error('Error al obtener producto con ID ' + id, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
@@ -48,30 +39,21 @@ export class ProductService {
 
   addProduct(newProduct: Product): Observable<Product> {
     return this.api.createProduct(newProduct).pipe(
-      catchError(error => {
-        console.error('Error al agregar producto', error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   updateProduct(id: number, updates: Partial<Product>): Observable<Product> {
     return this.api.updateProduct(id, updates).pipe(
       map(product => product),
-      catchError(error => {
-        console.error('Error al actualizar producto', error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
   deleteProduct(id: number): Observable<boolean> {
     return this.api.deleteProduct(id).pipe(
       map(() => true),
-      catchError(error => {
-        console.error(`Error al eliminar producto con ID ${id}`, error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 
@@ -95,10 +77,7 @@ export class ProductService {
 
     return this.api.bulkUpdateProducts(payload).pipe(
       map(response => (response as { success: boolean }).success),
-      catchError(error => {
-        console.error('Error en actualizacion masiva de precios', error);
-        return throwError(() => error);
-      })
+      catchError((error) => throwError(() => error))
     );
   }
 }

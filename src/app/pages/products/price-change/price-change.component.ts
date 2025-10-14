@@ -1,4 +1,4 @@
-// price-change.component.ts
+﻿// price-change.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,6 +20,14 @@ import { DataItem } from '../../../services/product-types';
   styleUrls: ['./price-change.component.css']
 })
 export class PriceChangeComponent implements OnInit {
+  private toNumber(value: number | null | undefined, fallback = 0): number {
+    return typeof value === 'number' && !Number.isNaN(value) ? value : fallback;
+  }
+
+  private toBoolean(value: boolean | null | undefined, fallback = false): boolean {
+    return typeof value === 'boolean' ? value : fallback;
+  }
+
   // Formularios reactivos
   priceForm!: FormGroup;
   filterForm!: FormGroup;
@@ -107,7 +115,7 @@ export class PriceChangeComponent implements OnInit {
     });
   }
 
-  // Habilita el botón "Filtrar" si hay porcentaje o utilidad válida
+  // Habilita el botÃ³n "Filtrar" si hay porcentaje o utilidad vÃ¡lida
   get canFilter(): boolean {
     const percentage = this.priceForm.get('percentage')?.value;
     const utility = this.priceForm.get('utility')?.value;
@@ -158,49 +166,54 @@ export class PriceChangeComponent implements OnInit {
     if (this.isCalculating) return;
     this.isCalculating = true;
 
-    const percentage = this.priceForm.get('percentage')?.value;
-    const utility = this.priceForm.get('utility')?.value;
+    const percentageControl = this.priceForm.get('percentage');
+    const utilityControl = this.priceForm.get('utility');
     const applyTo = this.priceForm.get('applyTo')?.value as 'cost' | 'salePrice';
 
-    const hasPercentage = percentage !== null && percentage > 0;
-    const hasUtility = utility !== null && utility >= 0;
+    const percentage = percentageControl ? this.toNumber(percentageControl.value) : 0;
+    const hasPercentage = percentageControl?.value !== null && percentage > 0;
 
-    this.filteredProducts.forEach(product => {
+    const utility = utilityControl ? this.toNumber(utilityControl.value) : 0;
+    const hasUtility = utilityControl?.value !== null && utility >= 0;
+
+    this.filteredProducts.forEach((product) => {
+      const costBase = this.toNumber(product.costBase);
+      const discounts = this.toNumber(product.discounts);
+      const includeIVA = this.toBoolean(product.includeIVA);
+      const utilityPercentage = this.toNumber(product.utilityPercentage);
+      const currentSalePrice = this.toNumber(product.salePrice, this.toNumber(product.price));
+
       if (hasPercentage) {
         if (applyTo === 'cost') {
-          const newCostBase = product.costBase * (1 + percentage / 100);
-          const discounts = product.discounts;
-          const netCost = newCostBase - discounts;
-          const finalCost = product.includeIVA ? netCost * (1 + this.IVA_RATE) : netCost;
-          const newSalePrice = finalCost * (1 + product.utilityPercentage / 100);
+          const newCostBase = costBase * (1 + percentage / 100);
+          const netCost = Math.max(newCostBase - discounts, 0);
+          const finalCost = includeIVA ? netCost * (1 + this.IVA_RATE) : netCost;
+          const newSalePrice = finalCost * (1 + utilityPercentage / 100);
 
           product.costoNuevo = newCostBase;
           product.salePriceNuevo = newSalePrice;
-          product.utilityNuevo = product.utilityPercentage;
+          product.utilityNuevo = utilityPercentage;
         } else {
-          const newSalePrice = product.salePrice * (1 + percentage / 100);
+          const newSalePrice = currentSalePrice * (1 + percentage / 100);
           product.salePriceNuevo = newSalePrice;
-          const finalCost = product.includeIVA
-            ? (product.costBase - product.discounts) * (1 + this.IVA_RATE)
-            : (product.costBase - product.discounts);
+
+          const baseNetCost = Math.max(costBase - discounts, 0);
+          const finalCost = includeIVA ? baseNetCost * (1 + this.IVA_RATE) : baseNetCost;
           const utilityNuevo = finalCost > 0 ? ((newSalePrice - finalCost) / finalCost) * 100 : 0;
           product.utilityNuevo = utilityNuevo;
         }
       } else if (hasUtility) {
-        const finalCost = product.includeIVA
-          ? (product.costBase - product.discounts) * (1 + this.IVA_RATE)
-          : (product.costBase - product.discounts);
+        const baseNetCost = Math.max(costBase - discounts, 0);
+        const finalCost = includeIVA ? baseNetCost * (1 + this.IVA_RATE) : baseNetCost;
         const newSalePrice = finalCost * (1 + utility / 100);
 
         product.salePriceNuevo = newSalePrice;
         product.utilityNuevo = utility;
 
         if (applyTo === 'cost') {
-          const newCostBase = product.costBase * (1 + percentage / 100);
-          product.costoNuevo = newCostBase;
+          product.costoNuevo = costBase;
         }
       } else {
-        // No hay cambios: limpiar valores nuevos
         product.costoNuevo = undefined;
         product.salePriceNuevo = undefined;
         product.utilityNuevo = undefined;
@@ -213,7 +226,7 @@ export class PriceChangeComponent implements OnInit {
   onAccept(): void {
     const count = this.filteredProducts.length;
     const confirmed = window.confirm(
-      `¿Estás seguro de que deseas actualizar ${count} producto(s) con los nuevos precios?`
+      `Â¿EstÃ¡s seguro de que deseas actualizar ${count} producto(s) con los nuevos precios?`
     );
     if (!confirmed) return;
 
@@ -227,7 +240,7 @@ export class PriceChangeComponent implements OnInit {
 
     this.productService.bulkUpdateProducts(updatedProducts).subscribe(success => {
       if (success) {
-        alert('Precios actualizados con éxito.');
+        alert('Precios actualizados con Ã©xito.');
         this.resetForm();
       } else {
         alert('Hubo un error al actualizar los precios.');
@@ -247,3 +260,11 @@ export class PriceChangeComponent implements OnInit {
     this.loadProducts(); // Recargar productos limpios
   }
 }
+
+
+
+
+
+
+
+
