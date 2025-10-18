@@ -3,6 +3,7 @@
 export interface DataItem {
   id: number;
   name: string;
+  isDeleted?: boolean;
 }
 
 export type EntityType = 'brands' | 'departments' | 'categories' | 'suppliers';

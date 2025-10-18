@@ -57,6 +57,20 @@
     </label>
   </div>
 
+  <div class="client-selector-controls" *ngIf="isHabitualCustomerSelected">
+    <button type="button" class="primary-btn" (click)="openClientSelector()">
+      {{ selectedClient ? 'Cambiar cliente' : '+ Seleccionar cliente' }}
+    </button>
+    <button
+      type="button"
+      class="secondary-btn"
+      *ngIf="selectedClient"
+      (click)="clearSelectedClient()"
+    >
+      Quitar cliente
+    </button>
+  </div>
+
   <!-- Datos cliente -->
   <div class="grid-compact">
     <label class="field small field--id">
@@ -209,6 +223,42 @@
         <button type="button" class="primary-btn" (click)="onSaveAsQuote()" [disabled]="isSubmissionBlocked()">Grabar como presupuesto</button>
       </div>
     </section>
+
+    <!-- Selector de clientes -->
+    <div *ngIf="isClientSelectorOpen" class="product-selector-backdrop" (click)="closeClientSelector()">
+      <div class="product-selector-panel" (click)="$event.stopPropagation()">
+        <div class="product-selector-header">
+          <h4>Seleccionar cliente</h4>
+          <button type="button" class="secondary-btn" (click)="closeClientSelector()">Cerrar</button>
+        </div>
+        <div class="product-selector-search">
+          <input type="text" #clientSearch [value]="clientSearchTerm"
+                 (input)="onSearchClients(clientSearch.value)"
+                 placeholder="Buscar por nombre, apellido o documento" autocomplete="off" />
+        </div>
+        <div class="product-selector-list" *ngIf="filteredClients.length > 0; else emptyClientList">
+          <div class="product-selector-item" *ngFor="let client of filteredClients">
+            <div class="product-selector-info">
+              <span class="product-selector-name">{{ client.nombre }} {{ client.apellido }}</span>
+              <span class="product-selector-sku" *ngIf="client.dni">DNI: {{ client.dni }}</span>
+              <span class="product-selector-sku" *ngIf="client.cuil">CUIT: {{ client.cuil }}</span>
+              <span class="product-selector-stock">
+                Tel: {{ client.phone || 'Sin teléfono' }}
+              </span>
+              <span class="product-selector-stock">
+                Domicilio: {{ client.domicilio || 'Sin domicilio' }}
+              </span>
+            </div>
+            <div class="product-selector-actions">
+              <button type="button" class="primary-btn" (click)="selectClient(client)">Elegir</button>
+            </div>
+          </div>
+        </div>
+        <ng-template #emptyClientList>
+          <div class="product-selector-empty">No se encontraron clientes.</div>
+        </ng-template>
+      </div>
+    </div>
 
     <!-- Selector de productos -->
     <div *ngIf="isSelectorOpen" class="product-selector-backdrop" (click)="closeProductSelector()">

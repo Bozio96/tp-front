@@ -17,16 +17,43 @@
       <div class="form-group-inline">
         <div class="form-group">
           <label for="dni">DNI</label>
-          <input id="dni" type="text" formControlName="dni" />
+          <input id="dni" type="text" maxlength="8" inputmode="numeric" formControlName="dni" />
+          <div
+            class="error-message"
+            *ngIf="
+              clientForm.get('dni')?.touched &&
+              (clientForm.get('dni')?.hasError('pattern') || clientForm.get('dni')?.hasError('maxlength'))
+            "
+          >
+            El DNI debe tener 8 digitos numericos.
+          </div>
         </div>
         <div class="form-group">
-          <label for="telefono">Teléfono</label>
-          <input id="telefono" type="text" formControlName="telefono" />
+          <label for="phone">Telefono</label>
+          <input id="phone" type="text" formControlName="phone" />
         </div>
       </div>
-       <div class="form-group">
+      <div class="form-group">
         <label for="cuil">Cuil</label>
-        <input id="cuil" type="text" formControlName="cuil" />
+        <input id="cuil" type="text" maxlength="11" inputmode="numeric" formControlName="cuil" />
+        <div
+          class="error-message"
+          *ngIf="
+            clientForm.get('cuil')?.touched &&
+            (clientForm.get('cuil')?.hasError('pattern') || clientForm.get('cuil')?.hasError('maxlength'))
+          "
+        >
+          El CUIL debe tener 11 digitos numericos.
+        </div>
+      </div>
+      <div
+        class="error-message"
+        *ngIf="
+          clientForm.hasError('dniOrCuil') &&
+          (clientForm.get('dni')?.touched || clientForm.get('cuil')?.touched)
+        "
+      >
+        Debes ingresar al menos DNI o CUIL.
       </div>
       <div class="form-group">
         <label for="domicilio">Domicilio</label>

@@ -10,6 +10,7 @@ export class ProductService {
 
   getAllProducts(): Observable<Product[]> {
     return this.api.getAllProducts().pipe(
+      map((products) => products.filter((product) => !product.isDeleted)),
       catchError(() => of([]))
     );
   }

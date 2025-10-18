@@ -2,7 +2,7 @@
   <h2>{{ client.nombre }} {{ client.apellido }}</h2>
   <img [src]="client.foto" alt="Foto de {{ client.nombre }}" width="150">
   <p><strong>DNI:</strong> {{ client.dni }}</p>
-  <p><strong>Teléfono:</strong> {{ client.telefono }}</p>
+  <p><strong>Teléfono:</strong> {{ client.phone }}</p>
   <p><strong>Domicilio:</strong> {{ client.domicilio }}</p>
 </div>
 <div *ngIf="!client">

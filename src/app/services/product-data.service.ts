@@ -31,20 +31,23 @@ export class ProductDataService {
 
   getBrands(): Observable<DataItem[]> {
     return this.api.getBrands().pipe(
+      map((items) => items.filter((item) => !item.isDeleted)),
       catchError(() => of([]))
     );
   }
 
   getDepartments(): Observable<DataItem[]> {
     return this.api.getDepartments().pipe(
+      map((items) => items.filter((item) => !item.isDeleted)),
       catchError(() => of([]))
     );
   }
 
   getCategories(): Observable<DataItem[]> {
     return this.api.getCategories().pipe(
+      map((items) => items.filter((item) => !item.isDeleted)),
       catchError((error) => {
-        console.error('Error al cargar categor�as', error);
+        console.error('Error al cargar categorias', error);
         return of([]);
       })
     );
@@ -52,6 +55,7 @@ export class ProductDataService {
 
   getSuppliers(): Observable<DataItem[]> {
     return this.api.getSuppliers().pipe(
+      map((items) => items.filter((item) => !item.isDeleted)),
       catchError(() => of([]))
     );
   }

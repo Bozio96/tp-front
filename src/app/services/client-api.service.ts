@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs'; //Mejor capturar de otra forma el error en vez de un of
+import { Observable, of, throwError } from 'rxjs'; //Mejor capturar de otra forma el error en vez de un of
 import { catchError } from 'rxjs/operators';
 import { Client } from '../models/client.model';
 
@@ -19,25 +19,25 @@ export class ClientApiService {
 
   getClientById(id: number): Observable<Client> {
     return this.http.get<Client>(`${this.clientsUrl}/${id}`).pipe(
-      catchError(() => of({} as Client))
+      catchError((error) => throwError(() => error))
     );
   }
 
-  createClient(client: Client): Observable<Client> {
+  createClient(client: Omit<Client, 'id'>): Observable<Client> {
     return this.http.post<Client>(this.clientsUrl, client).pipe(
-      catchError(() => of(client))
+      catchError((error) => throwError(() => error))
     );
   }
 
-  updateClient(client: Client): Observable<Client> {
-    return this.http.put<Client>(`${this.clientsUrl}/${client.id}`, client).pipe(
-      catchError(() => of(client))
+  updateClient(id: number, payload: Partial<Client>): Observable<Client> {
+    return this.http.put<Client>(`${this.clientsUrl}/${id}`, payload).pipe(
+      catchError((error) => throwError(() => error))
     );
   }
 
   deleteClient(id: number): Observable<void> {
     return this.http.delete<void>(`${this.clientsUrl}/${id}`).pipe(
-      catchError(() => of(undefined))
+      catchError((error) => throwError(() => error))
     );
   }
 }

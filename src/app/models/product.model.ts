@@ -16,6 +16,7 @@ export interface Product {
   salePrice: number;
   minStock: number;
   sku: string;
+  isDeleted?: boolean;
 
   // Propiedades opcionales para el cambio de precios
   costoNuevo?: number | null;

@@ -34,6 +34,7 @@
           <th>Cuil/Cuit</th>
           <th>Teléfono</th>
           <th>Domicilio</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -41,8 +42,8 @@
           <td>{{ client.nombre }}</td>
           <td>{{ client.apellido }}</td>
           <td>{{ client.dni }}</td>
-          <!-- <td>{{ client.cuil }}</td> -->
-          <td>{{ client.telefono }}</td>
+          <td>{{ client.cuil }}</td> 
+          <td>{{ client.phone }}</td>
           <td>{{ client.domicilio }}</td>
           <td class="action-cell" *ngIf="authService.hasRole('admin')">
             <div class="action-container" #actionContainer>

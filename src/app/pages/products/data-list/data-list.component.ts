@@ -21,6 +21,7 @@ export class DataListComponent implements OnInit, OnDestroy {
   entityType: EntityType = 'brands';
   pageTitle: string = '';
   addLabel: string = '';
+  singularLabel: string = '';
 
   allItems: DataItem[] = [];
   filteredItems: DataItem[] = [];
@@ -71,18 +72,22 @@ export class DataListComponent implements OnInit, OnDestroy {
       case 'brands':
         this.pageTitle = 'Marcas';
         this.addLabel = 'Agregar Marca';
+        this.singularLabel = 'Marca';
         break;
       case 'departments':
         this.pageTitle = 'Departamentos';
         this.addLabel = 'Agregar Departamento';
+        this.singularLabel = 'Departamento';
         break;
       case 'categories':
         this.pageTitle = 'Categorías';
         this.addLabel = 'Agregar Categoría';
+        this.singularLabel = 'Categoría';
         break;
       case 'suppliers':
         this.pageTitle = 'Proveedores';
         this.addLabel = 'Agregar Proveedor';
+        this.singularLabel = 'Proveedor';
         break;
     }
   }
@@ -127,30 +132,24 @@ export class DataListComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClick(id: number): void {
-    if (
-      confirm(
-        `¿Estás seguro de que quieres eliminar este ${this.pageTitle.slice(
-          0,
-          -1
-        )}?`
-      )
-    ) {
+    if (confirm(`¿Estás seguro de que quieres eliminar este ${this.singularLabel}?`)) {
       this.productDataService.deleteItem(this.entityType, id).subscribe({
         next: (success: boolean) => {
           if (success) {
-            console.log(`${this.pageTitle.slice(0, -1)} eliminado con éxito.`);
+            this.notifications.showSuccess(`${this.singularLabel} eliminado con éxito.`);
             this.loadItems();
           } else {
-            console.warn(
-              `No se pudo eliminar el ${this.pageTitle.slice(0, -1)}.`
-            );
+            this.notifications.showError(`No se pudo eliminar el ${this.singularLabel}.`);
           }
           this.menuItemId = null;
         },
-        error: () => {
-          this.notifications.showError(
-            `No se pudo eliminar el ${this.pageTitle.slice(0, -1)}.`
-          );
+        error: (error) => {
+          const backendMessage = error?.error?.message;
+          if (backendMessage) {
+            this.notifications.showError(backendMessage);
+          } else {
+            this.notifications.showError(`No se pudo eliminar el ${this.singularLabel}.`);
+          }
           this.menuItemId = null;
         },
       });

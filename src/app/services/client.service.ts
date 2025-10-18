@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ClientApiService } from './client-api.service';
 import { Client } from '../models/client.model';
@@ -19,19 +19,22 @@ export class ClientService {
       return this.getAllClients();
     }
     return this.getAllClients().pipe(
-      map(clients => clients.filter(c => 
-        c.nombre.toLowerCase().includes(term.toLowerCase()) ||
-        c.apellido.toLowerCase().includes(term.toLowerCase()) ||
-        c.dni.toLowerCase().includes(term.toLowerCase())
-      )),
+      map(clients => clients.filter(c => {
+        const lowerTerm = term.toLowerCase();
+        return (
+          c.nombre.toLowerCase().includes(lowerTerm) ||
+          c.apellido.toLowerCase().includes(lowerTerm) ||
+          (c.dni ?? '').toLowerCase().includes(lowerTerm) ||
+          (c.cuil ?? '').toLowerCase().includes(lowerTerm)
+        );
+      })),
       catchError(() => of([]))
     );
   }
 
-  getClientById(id: number): Observable<Client | undefined> {
+  getClientById(id: number): Observable<Client> {
     return this.api.getClientById(id).pipe(
-      map(client => client),
-      catchError(() => of(undefined))
+      catchError((error) => throwError(() => error))
     );
   }
 
@@ -41,23 +44,22 @@ export class ClientService {
     );
   }
 
-  addClient(newClient: Client): Observable<Client> {
+  addClient(newClient: Omit<Client, 'id'>): Observable<Client> {
     return this.api.createClient(newClient).pipe(
-      catchError(() => of(newClient))
+      catchError((error) => throwError(() => error))
     );
   }
 
-  updateClient(updatedClient: Client): Observable<Client> {
-    return this.api.updateClient(updatedClient).pipe(
-      map(client => client),
-      catchError(() => of(updatedClient))
+  updateClient(id: number, updates: Partial<Client>): Observable<Client> {
+    return this.api.updateClient(id, updates).pipe(
+      catchError((error) => throwError(() => error))
     );
   }
 
   deleteClient(id: number): Observable<boolean> {
     return this.api.deleteClient(id).pipe(
       map(() => true),
-      catchError(() => of(false))
+      catchError((error) => throwError(() => error))
     );
   }
 }
