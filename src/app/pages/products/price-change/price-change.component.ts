@@ -20,12 +20,31 @@ import { DataItem } from '../../../services/product-types';
   styleUrls: ['./price-change.component.css']
 })
 export class PriceChangeComponent implements OnInit {
-  private toNumber(value: number | null | undefined, fallback = 0): number {
-    return typeof value === 'number' && !Number.isNaN(value) ? value : fallback;
+  private toNumber(
+    value: number | string | null | undefined,
+    fallback = 0,
+  ): number {
+    if (typeof value === 'number') {
+      return Number.isNaN(value) ? fallback : value;
+    }
+    if (typeof value === 'string') {
+      const parsed = Number(value);
+      return Number.isNaN(parsed) ? fallback : parsed;
+    }
+    return fallback;
   }
 
-  private toBoolean(value: boolean | null | undefined, fallback = false): boolean {
-    return typeof value === 'boolean' ? value : fallback;
+  private toBoolean(
+    value: boolean | string | null | undefined,
+    fallback = false,
+  ): boolean {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+    if (typeof value === 'string') {
+      return value.toLowerCase() === 'true';
+    }
+    return fallback;
   }
 
   // Formularios reactivos

@@ -96,7 +96,7 @@ export class DataListComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.productDataService.getItems(this.entityType).subscribe(
       (data: DataItem[]) => {
-        this.allItems = data;
+        this.allItems = this.sortById(data);
         this.filterItems();
         this.loading = false;
       },
@@ -163,5 +163,9 @@ export class DataListComponent implements OnInit, OnDestroy {
 
   onDocumentClick(): void {
     this.menuItemId = null;
+  }
+
+  private sortById(items: DataItem[]): DataItem[] {
+    return [...items].sort((a, b) => a.id - b.id);
   }
 }
