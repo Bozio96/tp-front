@@ -100,8 +100,16 @@
 </nav>
 
 
-  <div class="bottom-section">
-    <button class="profile-btn" (click)="toggleProfileMenu()">
+  <div class="bottom-section" #profileContainer>
+    <button
+      class="profile-btn"
+      [class.collapsed]="isCollapsed"
+      [matTooltip]="(currentUser$ | async)?.username || 'Perfil'"
+      matTooltipPosition="right"
+      matTooltipClass="tooltip-arrow"
+      [matTooltipDisabled]="!isCollapsed"
+      (click)="toggleProfileMenu()"
+    >
       @if (isLoggedIn$ | async) {
          <img src="assets/logo.png" alt="Logo" class="logo" />
       } @else {

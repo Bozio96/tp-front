@@ -1,5 +1,5 @@
 // src/app/components/sidebar/sidebar.component.ts
-import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule, Router } from '@angular/router';
@@ -30,6 +30,7 @@ export class SidebarComponent {
 
   private authService = inject(AuthService);
   private router = inject(Router);
+  @ViewChild('profileContainer') profileContainerRef?: ElementRef<HTMLElement>;
 
   constructor() {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
@@ -52,5 +53,18 @@ export class SidebarComponent {
   logout(): void {
     this.authService.logout();
     this.showProfileMenu = false;
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.showProfileMenu) {
+      return;
+    }
+
+    const profileContainer = this.profileContainerRef?.nativeElement;
+
+    if (profileContainer && !profileContainer.contains(event.target as Node)) {
+      this.showProfileMenu = false;
+    }
   }
 }
