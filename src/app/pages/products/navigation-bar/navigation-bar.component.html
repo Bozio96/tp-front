@@ -1,5 +1,15 @@
 <nav class="top-nav">
-  <div class="nav-links">
+  <button class="burger-menu" (click)="toggleMenu()">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div 
+    class="menu-overlay" 
+    *ngIf="isMenuOpen" 
+    (click)="closeMenu()">
+  </div>
+
+  <div class="nav-links" [class.show]="isMenuOpen">
     <a
       class="nav-btn"
       routerLink="/products"

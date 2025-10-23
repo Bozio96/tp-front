@@ -1,6 +1,59 @@
-@media (max-width: 600px){
-/* Responsive de la tabla y columnas */
+/* TABLET */
+@media (max-width: 1024px){
+      .clients-table {
+    width: 80%;
+    overflow-x: auto;
+    border: none;
+    margin: 0 auto
+  }
+
+  .clients-table th,
+  .clients-table td {
+    padding: 8px 10px;
+    font-size: 0.85em;
+    white-space: nowrap;
+  }
+
+  .clients-table th:nth-child(4),  /* Cuil/Cuit */
+  .clients-table td:nth-child(4),
+  .clients-table th:nth-child(6),  /* Domicilio */
+  .clients-table td:nth-child(6) {
+    display: none;
+  }
 }
+
+/* MOBILE */
+ @media(max-width: 768px){
+.header-clients{
+    width: 100vw;
+    text-align: center;
+}
+.header-toolbar-container{
+    margin-left: 50px;
+}
+
+  .clients-table {
+    width: 50%;
+    overflow-x: auto;
+    border: none;
+    margin: 0 10px 0 60px
+  }
+
+  .clients-table th,
+  .clients-table td {
+    padding: 8px 10px;
+    font-size: 0.85em;
+    white-space: nowrap;
+  }
+  .clients-table th:nth-child(4),  /* Cuil/Cuit */
+  .clients-table td:nth-child(4),
+    .clients-table th:nth-child(5),  /* Telefono */
+  .clients-table td:nth-child(5),
+  .clients-table th:nth-child(6),  /* Domicilio */
+  .clients-table td:nth-child(6) {
+    display: none;
+  }
+} 
 
 /* Estilos generales */
 .header-clients{

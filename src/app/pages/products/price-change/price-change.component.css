@@ -1,5 +1,8 @@
-/* Responsive: lista de cambios de precio apilada y scrolleable en móvil */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .price-change-container{
+    width: 80%;
+    margin-left: 60px;
+  }
   .price-change-list, table {
     width: 100%;
     min-width: 400px;
@@ -10,6 +13,21 @@
     padding: 8px 4px;
     font-size: 15px;
     white-space: nowrap;
+  }
+  .products-list th:nth-child(1), /*SKU*/
+  .products-list td:nth-child(1),
+    .products-list th:nth-child(3), /*Costo*/
+  .products-list td:nth-child(3),
+    .products-list th:nth-child(4), /*Utilidad*/
+  .products-list td:nth-child(4),
+    .products-list th:nth-child(5), /*venta*/
+  .products-list td:nth-child(5),
+    .products-list th:nth-child(6), /*costo nuevo*/
+  .products-list td:nth-child(6),
+    .products-list th:nth-child(8), /*venta nuevo*/
+  .products-list td:nth-child(8)
+   {
+    display: none;
   }
 }
 /* price-change.component.css */

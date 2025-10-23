@@ -1,4 +1,39 @@
-﻿/* ====== Contenedor principal ====== */
+﻿/* MOBILE */
+@media (max-width: 880px) {
+  .sales-container{
+    width: 80%;
+    margin-left: 60px;
+  }
+
+  .grid-compact, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  .grid.grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+/**/
+
+.grid-3 .field--payment {
+  max-width: 220px;
+}
+
+.grid-3 .field--payment select {
+  width: 100%;
+}
+
+
 .sales-container {
   max-width: 1300px;
   margin: 2rem auto;
@@ -10,7 +45,6 @@
   color: #2c3e50;
 }
 
-/* ====== Encabezado ====== */
 .header-clients {
   text-align: center;
   margin-bottom: 1.5rem;
@@ -23,7 +57,6 @@
   margin: 0;
 }
 
-/* ====== Secciones ====== */
 .card {
   background: #ffffff;
   border-radius: 12px;
@@ -47,7 +80,6 @@
   color: #0f172a;
 }
 
-/* ====== Grillas ====== */
 .grid {
   display: grid;
   gap: 1rem;
@@ -60,8 +92,8 @@
 }
 
 .grid-compact .field {
-  flex: 1;            /* ambos crecen igual */
-  max-width: 300px;   /* límite de ancho */
+  flex: 1;            
+  max-width: 300px;   
 }
 
 .grid-3 .field--date {
@@ -114,13 +146,12 @@
 
 
 
-/* ====== Inputs ====== */
 .field--name input {
   max-width: 100%;
 }
 
 .field.small input {
-  max-width: 250px;  /* límite de ancho */
+  max-width: 250px; 
 }
 
 .field {
@@ -169,7 +200,6 @@
   cursor: not-allowed;
 }
 
-/* ====== Checkbox y radio ====== */
 .checkbox, .radio-group label {
   display: flex;
   align-items: center;
@@ -181,7 +211,7 @@
 
 .radio-group {
   display: flex;
-  gap: 1rem; /* separa cada opción */
+  gap: 1rem; 
   margin-top: 0.5rem;
 }
 
@@ -192,17 +222,16 @@ input[type="checkbox"], input[type="radio"] {
   cursor: pointer;
 }
 
-/* ====== Tabla ====== */
 .table-wrapper {
   width: 100%;
-  overflow-x: hidden; /* sin scroll horizontal */
+  overflow-x: hidden;
 }
 
 .items-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
-  table-layout: fixed; /* 🔑 fuerza proporción */
+  table-layout: fixed; 
 }
 
 .items-table th,
@@ -220,7 +249,6 @@ input[type="checkbox"], input[type="radio"] {
   color: #334155;
 }
 
-/* Reparto proporcional */
 .items-table th:nth-child(1),
 .items-table td:nth-child(1) { width: 12%; text-align: center; } /* SKU */
 
@@ -248,7 +276,6 @@ input[type="checkbox"], input[type="radio"] {
 .items-table th:nth-child(9),
 .items-table td:nth-child(9) { width: 6%; text-align: center; } /* Acción */
 
-/* Inputs dentro de celdas */
 .items-table input {
   width: 100%;
   padding: 0.4rem;
@@ -258,7 +285,6 @@ input[type="checkbox"], input[type="radio"] {
   text-align: center;
 }
 
-/* Botón eliminar */
 .delete-btn {
   background: none;
   border: none;
@@ -271,7 +297,6 @@ input[type="checkbox"], input[type="radio"] {
   color: #b91c1c;
 }
 
-/* ====== Totales ====== */
 .totals-grid {
   display: grid;
   gap: 0.6rem;
@@ -291,7 +316,6 @@ input[type="checkbox"], input[type="radio"] {
   padding-top: 0.5rem;
 }
 
-/* ====== Botones ====== */
 button {
   cursor: pointer;
   border: none;
@@ -302,12 +326,12 @@ button {
   transition: background 0.2s, box-shadow 0.2s;
 }
 .header-row .primary-btn {
-  margin-bottom: 0.5rem; /* separa botón de la tabla */
+  margin-bottom: 0.5rem; 
 }
 .actions {
   display: flex;
-  gap: 1rem; /* separa los botones */
-  flex-wrap: wrap; /* por si no entran en pantallas chicas */
+  gap: 1rem; 
+  flex-wrap: wrap;
 }
 
 .primary-btn {
@@ -320,7 +344,7 @@ button {
 }
 
 .secondary-btn {
-  background-color: #ccc; /* Light gray */
+  background-color: #ccc; 
   color: #333;
 }
 
@@ -337,7 +361,6 @@ button {
   background: #eff6ff;
 }
 
-/* ====== Product Selector ====== */
 .product-selector-backdrop {
   position: fixed;
   inset: 0;
@@ -396,7 +419,6 @@ button {
   color: #000000;
 }
 
-/* ====== Errores ====== */
 .error {
   font-size: 0.8rem;
   color: #dc2626;
@@ -424,30 +446,4 @@ button {
 
 .items-table input[type="number"] {
   text-align: right;
-}
-
-
-/* ====== Responsive ====== */
-@media (max-width: 768px) {
-  .grid-compact, .grid-3 {
-    grid-template-columns: 1fr;
-  }
-
-  .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  button {
-    width: 100%;
-  }
-}
-
-.grid-3 .field--payment {
-  max-width: 220px;
-}
-
-.grid-3 .field--payment select {
-  width: 100%;
 }
