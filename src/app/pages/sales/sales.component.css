@@ -22,6 +22,24 @@
   button {
     width: 100%;
   }
+  .product-selector-panel{
+    width: 80%;
+    margin-left: 60px;
+    margin-right: 2px;
+  }
+  .items-table th:nth-child(1), /*SKU*/
+  .items-table td:nth-child(1),
+   .items-table th:nth-child(4), /*Precio U*/
+  .items-table td:nth-child(4),
+   .items-table th:nth-child(5), /*Desc*/
+  .items-table td:nth-child(5),
+   .items-table th:nth-child(6), /*Subtot*/
+  .items-table td:nth-child(6),
+   .items-table th:nth-child(7), /*iva*/
+  .items-table td:nth-child(7)
+  {
+    display: none;
+  }
 }
 /**/
 
