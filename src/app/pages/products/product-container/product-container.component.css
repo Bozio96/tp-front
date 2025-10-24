@@ -1,4 +1,3 @@
-/* Responsive: contenedor de productos apilado en móvil */
 @media (max-width: 600px) {
 	.product-container {
 		flex-direction: column;

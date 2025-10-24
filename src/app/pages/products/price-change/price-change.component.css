@@ -30,7 +30,7 @@
     display: none;
   }
 }
-/* price-change.component.css */
+
 .price-change-container {
   padding: 10px;
   font-family: inherit;
@@ -44,7 +44,7 @@
   font-size: 1.4em;
 }
 
-/* === Sección de entrada === */
+
 .input-section {
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
@@ -93,7 +93,7 @@
   margin: 0 10px;
 }
 
-/* === Panel de filtros (igual al advanced-search-form) === */
+
 .filter-panel {
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
@@ -130,7 +130,7 @@
   font-size: 0.95rem;
 }
 
-/* === Botones (usar mismo estilo que products-list) === */
+
 .btn-filter,
 .btn-clear,
 .accept-btn,
