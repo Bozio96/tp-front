@@ -1,5 +1,5 @@
-/* Responsive: adapta la home a pantallas pequeñas */
-@media (max-width: 600px) {
+/* MOBILE */
+@media (max-width: 768px) {
 	:host, .home-container {
 		padding: 8px;
 		font-size: 16px;
@@ -7,6 +7,10 @@
 	h1, h2, h3 {
 		font-size: 1.2em;
 	}
+  .dashboard-container{
+    width: 80%;
+    margin-left: 60px;
+  }
 }
 
 .dashboard-container {

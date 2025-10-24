@@ -1,5 +1,10 @@
-/* Responsive: formulario apilado y campos grandes en móvil */
-@media (max-width: 600px) {
+/*Mobile */
+@media (max-width: 768px) {
+  .edit-container{
+    width: 80%;
+    margin-left: 60px;
+  }
+
   form, .form-container {
     display: flex;
     flex-direction: column;
@@ -15,7 +20,7 @@
     font-size: 1em;
   }
 }
-/* General container for the edit form */
+
 .edit-container {
   max-width: 800px;
   margin: 40px auto;
@@ -25,7 +30,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Headings */
+
 h2 {
   text-align: center;
   color: #2C3E50;
@@ -42,7 +47,7 @@ h3 {
   border-bottom: 1px solid #ccc;
 }
 
-/* Form Grouping */
+
 .form-group {
   margin-bottom: 15px;
 }
@@ -54,7 +59,7 @@ label {
   margin-bottom: 5px;
 }
 
-/* Input Fields */
+
 input[type="text"],
 input[type="number"],
 textarea {
@@ -63,11 +68,11 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 16px;
-  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+  box-sizing: border-box; 
 }
 
 textarea {
-  resize: vertical; /* Allows vertical resizing */
+  resize: vertical; 
   min-height: 80px;
 }
 
@@ -76,23 +81,23 @@ input:disabled {
   cursor: not-allowed;
 }
 
-/* Inline and Grid Layouts for Form Groups */
+
 .form-group-inline {
   display: grid;
-  grid-template-columns: 1fr 2fr; /* Creates two columns, the second being twice as wide as the first */
+  grid-template-columns: 1fr 2fr; 
   gap: 20px;
 }
 
 .form-group-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Creates a responsive grid with minimum item width of 200px */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
   gap: 20px;
 }
 
-/* Form Actions (Buttons) */
+
 .form-actions {
   display: flex;
-  justify-content: flex-end; /* Aligns items to the end of the flex container */
+  justify-content: flex-end; 
   gap: 10px;
   margin-top: 20px;
   border-top: 1px solid #ddd;
@@ -107,23 +112,23 @@ input:disabled {
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
-  transition: background-color 0.3s; /* Smooth transition for background color changes */
+  transition: background-color 0.3s; 
 }
 
 .save-btn {
-  background-color: #F39C12; /* Orange */
+  background-color: #F39C12; 
   color: white;
 }
 
 .save-btn:hover {
-  background-color: #D35400; /* Darker orange on hover */
+  background-color: #D35400;
 }
 
 .cancel-btn {
-  background-color: #ccc; /* Light gray */
+  background-color: #ccc; 
   color: #333;
 }
 
 .cancel-btn:hover {
-  background-color: #999; /* Darker gray on hover */
+  background-color: #999; 
 }

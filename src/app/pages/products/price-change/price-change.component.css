@@ -1,5 +1,8 @@
-/* Responsive: lista de cambios de precio apilada y scrolleable en móvil */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .price-change-container{
+    width: 80%;
+    margin-left: 60px;
+  }
   .price-change-list, table {
     width: 100%;
     min-width: 400px;
@@ -11,8 +14,23 @@
     font-size: 15px;
     white-space: nowrap;
   }
+  .products-list th:nth-child(1), /*SKU*/
+  .products-list td:nth-child(1),
+    .products-list th:nth-child(3), /*Costo*/
+  .products-list td:nth-child(3),
+    .products-list th:nth-child(4), /*Utilidad*/
+  .products-list td:nth-child(4),
+    .products-list th:nth-child(5), /*venta*/
+  .products-list td:nth-child(5),
+    .products-list th:nth-child(6), /*costo nuevo*/
+  .products-list td:nth-child(6),
+    .products-list th:nth-child(8), /*venta nuevo*/
+  .products-list td:nth-child(8)
+   {
+    display: none;
+  }
 }
-/* price-change.component.css */
+
 .price-change-container {
   padding: 10px;
   font-family: inherit;
@@ -26,7 +44,7 @@
   font-size: 1.4em;
 }
 
-/* === Sección de entrada === */
+
 .input-section {
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
@@ -75,7 +93,7 @@
   margin: 0 10px;
 }
 
-/* === Panel de filtros (igual al advanced-search-form) === */
+
 .filter-panel {
   background-color: #f8f9fa;
   border: 1px solid #e0e0e0;
@@ -112,7 +130,7 @@
   font-size: 0.95rem;
 }
 
-/* === Botones (usar mismo estilo que products-list) === */
+
 .btn-filter,
 .btn-clear,
 .accept-btn,

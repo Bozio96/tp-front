@@ -1,8 +1,6 @@
-<!-- price-change.component.html -->
 <div class="price-change-container" [formGroup]="priceForm">
   <h2>Cambio Masivo de Precios</h2>
 
-  <!-- Sección de entrada con previsualización -->
   <div class="input-section">
     <div class="input-group">
       <label>
@@ -15,8 +13,6 @@
       </label>
     </div>
 
-
-    <!-- Inputs con validación -->
     <div class="input-row">
       <div class="input-field">
         <label>Porcentaje de aumento (%)</label>
@@ -52,7 +48,6 @@
     </div>
   </div>
 
-  <!-- Filtro desplegable -->
   <div class="filter-panel" *ngIf="showFilter">
     <h3>Filtrar Productos</h3>
     <form [formGroup]="filterForm">
@@ -96,7 +91,6 @@
     </form>
   </div>
 
-  <!-- Listado de productos -->
   <div class="products-list" *ngIf="filteredProducts.length > 0; else noProducts">
     <h3>Productos Filtrados ({{ filteredProducts.length }})</h3>
 
