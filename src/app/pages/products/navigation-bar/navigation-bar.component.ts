@@ -12,9 +12,17 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./navigation-bar.component.css']
 })
 export class NavigationBarComponent {
+  isMenuOpen = false;
 
   constructor(
     public authService: AuthService // <-- Nuevo: para obtener los datos de filtro
   ) {}
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu() {
+  this.isMenuOpen = false;
+}
 }

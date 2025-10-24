@@ -1,17 +1,38 @@
-/* Responsive: tabla scrolleable y columnas compactas en móvil */
-@media (max-width: 600px) {
+/* MOBILE */
+@media (max-width: 768px) {
+    .header-toolbar-container{
+        width: 80%;
+        margin-left: 60px;
+    }
+
+    .advanced-search-form{
+        width: 80%;
+        margin-left: 60px;
+    }
+
     .products-table, table {
         font-size: 14px;
-        width: 100%;
+        width: 80%;
+        margin-left: 60px;
         min-width: 500px;
         display: block;
         overflow-x: auto;
         border-collapse: collapse;
     }
     th, td {
-        padding: 8px 4px;
-        white-space: nowrap;
+        padding: 8px 10px;
+        font-size: 0.85em;
+        white-space: normal;
+        word-break: break-word;
     }
+    .products-table th:nth-child(1), /*SKU*/
+    .products-table td:nth-child(1),
+    .products-table th:nth-child(3), /*Stock*/
+    .products-table td:nth-child(3)
+    {
+        display: none;
+    }
+
     .col-secondary, .hide-mobile {
         display: none !important;
     }
