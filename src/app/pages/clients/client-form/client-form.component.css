@@ -133,3 +133,9 @@ input:disabled {
 .cancel-btn:hover {
   background-color: #999; /* Darker gray on hover */
 }
+
+.error-message {
+  margin-top: 4px;
+  color: #d9534f;
+  font-size: 0.85rem;
+}

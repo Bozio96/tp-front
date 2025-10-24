@@ -211,21 +211,27 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
       '¿Estás seguro de que quieres eliminar este producto?'
     );
     if (confirmation) {
-      this.productService.deleteProduct(productId).subscribe(
-        (success) => {
+      this.productService.deleteProduct(productId).subscribe({
+        next: (success) => {
           if (success) {
-            console.log('Producto eliminado con éxito.');
+            this.notifications.showSuccess('Producto eliminado con éxito.');
             // Eliminar el producto de la lista local y aplicar filtros
-            this.allProducts = this.allProducts.filter(p => p.id !== productId);
+            this.allProducts = this.allProducts.filter((p) => p.id !== productId);
             this.applyFilters();
           } else {
             this.notifications.showError('No se pudo eliminar el producto.');
           }
         },
-        () => {
+        error: (error) => {
+          const backendMessage = error?.error?.message;
+          if (error?.status === 409 && backendMessage) {
+            this.notifications.showError(backendMessage);
+            return;
+          }
+
           this.notifications.showError('Ocurrió un error al eliminar el producto.');
-        }
-      );
+        },
+      });
     }
   }
 

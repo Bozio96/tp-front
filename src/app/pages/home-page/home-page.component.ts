@@ -12,9 +12,9 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./home-page.component.css'],
 })
 export class HomePageComponent implements OnInit {
-  cards: { totalVendido: number; presupuestos: number; productosVendidos: number } = {
+  cards: { totalVendido: number; clientes: number; productosVendidos: number } = {
     totalVendido: 0,
-    presupuestos: 0,
+    clientes: 0,
     productosVendidos: 0,
   };
   productosTop: any[] = [];
@@ -38,7 +38,11 @@ export class HomePageComponent implements OnInit {
   loadDashboardData() {
     // 🔹 Cards
     this.dashboardService.getCards().subscribe((data) => {
-      this.cards = data;
+      this.cards = {
+        totalVendido: data?.totalVendido ?? 0,
+        clientes: data?.clientes ?? data?.presupuestos ?? 0,
+        productosVendidos: data?.productosVendidos ?? 0,
+      };
     });
 
     // 🔹 Top 5 productos

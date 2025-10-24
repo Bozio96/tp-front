@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, Subscription, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
 import { DataToolbarComponent } from '../../../components/data-toolbar/data-toolbar.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-clients-list',
@@ -47,7 +48,8 @@ export class ClientsListComponent implements OnInit, OnDestroy {
   constructor(
     private clientService: ClientService,
     private router: Router,
-    public authService: AuthService
+    public authService: AuthService,
+    private notifications: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -116,20 +118,27 @@ export class ClientsListComponent implements OnInit, OnDestroy {
   onDeleteClick(clientId: number): void {
     this.menuClientId = null;
     const confirmation = window.confirm(
-      '¿Estás seguro de que quieres eliminar este cliente?'
+      'Estas seguro de que quieres eliminar este cliente?'
     );
-    if (confirmation) {
-      this.clientService.deleteClient(clientId).subscribe({
-        next: () => {
-          console.log('Cliente eliminado con éxito.');
-          // Volver a buscar para refrescar la lista
-          this.searchTerms.next(this.searchTerm);
-        },
-        error: (error) => {
-          // El interceptor de errores ya debería mostrar una notificación
-          console.error('Error al eliminar cliente:', error);
-        }
-      });
+    if (!confirmation) {
+      return;
     }
+
+    this.clientService.deleteClient(clientId).subscribe({
+      next: () => {
+        this.allClients = this.allClients.filter(
+          (client) => client.id !== clientId,
+        );
+        this.filteredClients = this.filteredClients.filter(
+          (client) => client.id !== clientId,
+        );
+        this.notifications.showSuccess('Cliente eliminado con exito.');
+      },
+      error: (error) => {
+        console.error('Error al eliminar cliente:', error);
+        this.notifications.showError('No se pudo eliminar el cliente.');
+      },
+    });
   }
 }
+

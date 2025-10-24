@@ -11,7 +11,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { Subscription, firstValueFrom, take } from 'rxjs';
 import { Product } from '../../models/product.model';
+import { Client } from '../../models/client.model';
 import { ProductService } from '../../services/product.service';
+import { ClientService } from '../../services/client.service';
 import { PdfService } from '../../services/pdf.service';
 import { SalesApiService, SalePayload, SaleResponse, SaleCustomerPayload } from '../../services/sales-api.service';
 import { NotificationService } from '../../services/notification.service';
@@ -69,6 +71,7 @@ export class SalesComponent implements OnInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly productService = inject(ProductService);
+  private readonly clientService = inject(ClientService);
   private readonly pdfService = inject(PdfService); // Inyeccion del servicio
   private readonly salesApi = inject(SalesApiService);
   private readonly notifications = inject(NotificationService);
@@ -76,15 +79,28 @@ export class SalesComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
   private readonly defaultIvaRate = 21;
   private currentPointOfSale = '0003';
+  private readonly customerFieldNames: Array<keyof SalesFormValue> = [
+    'clientId',
+    'customerName',
+    'customerCuit',
+    'customerDni',
+    'customerAddress',
+    'customerPhone',
+  ];
 
   salesForm: FormGroup;
   lineSummaries: LineSummary[] = [];
   totals: SalesTotals = { net: 0, iva: 0, discounts: 0, final: 0 };
   products: Product[] = [];
   filteredProducts: Product[] = [];
+  clients: Client[] = [];
+  filteredClients: Client[] = [];
   @ViewChild(MatTable) table?: MatTable<FormGroup>;
   isSelectorOpen = false;
+  isClientSelectorOpen = false;
   searchTerm = '';
+  clientSearchTerm = '';
+  selectedClient: Client | null = null;
   invoicePreview = '';
 
   constructor() {
@@ -149,6 +165,21 @@ export class SalesComponent implements OnInit, OnDestroy {
       );
     }
 
+    this.clientService
+      .getAllClients()
+      .pipe(take(1))
+      .subscribe({
+        next: (clients) => {
+          this.clients = clients ?? [];
+          this.filteredClients = [...this.clients];
+        },
+        error: () => {
+          this.notifications.showError('No se pudieron cargar los clientes.');
+          this.clients = [];
+          this.filteredClients = [];
+        },
+      });
+
     this.productService
       .getAllProducts()
       .pipe(take(1))
@@ -173,6 +204,100 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   get items(): FormArray<FormGroup> {
     return this.salesForm.get('items') as FormArray<FormGroup>;
+  }
+
+  get isHabitualCustomerSelected(): boolean {
+    const customerType = this.salesForm.get('customerType')?.value;
+    return this.normalizeToString(customerType).toLowerCase() === 'habitual';
+  }
+
+  openClientSelector(): void {
+    this.isClientSelectorOpen = true;
+    this.clientSearchTerm = '';
+    this.filteredClients = [...this.clients];
+  }
+
+  closeClientSelector(): void {
+    this.isClientSelectorOpen = false;
+    this.clientSearchTerm = '';
+    this.filteredClients = [...this.clients];
+  }
+
+  onSearchClients(term: string): void {
+    this.clientSearchTerm = term;
+    const cleaned = term.trim().toLowerCase();
+    if (!cleaned) {
+      this.filteredClients = [...this.clients];
+      return;
+    }
+
+    this.filteredClients = this.clients.filter((client) => {
+      const firstName = client.nombre?.toLowerCase() ?? '';
+      const lastName = client.apellido?.toLowerCase() ?? '';
+      const dni = client.dni?.toLowerCase() ?? '';
+      const cuil = client.cuil?.toLowerCase() ?? '';
+      return (
+        firstName.includes(cleaned) ||
+        lastName.includes(cleaned) ||
+        dni.includes(cleaned) ||
+        cuil.includes(cleaned)
+      );
+    });
+  }
+
+  selectClient(client: Client): void {
+    this.selectedClient = client;
+    const customerTypeControl = this.salesForm.get('customerType');
+    if (customerTypeControl?.value !== 'habitual') {
+      customerTypeControl?.setValue('habitual', { emitEvent: false });
+    }
+    this.applyClientToForm(client);
+    this.handleCustomerTypeChange('habitual');
+    this.closeClientSelector();
+
+    this.clientService
+      .getClientById(client.id)
+      .pipe(take(1))
+      .subscribe({
+        next: (fetchedClient) => {
+          const fallbackRecord = client as Partial<Client> & {
+            telefono?: string | null;
+          };
+          const fetchedRecord = fetchedClient as Partial<Client> & {
+            telefono?: string | null;
+          };
+          const normalizedPhone =
+            fetchedRecord.phone ??
+            fetchedRecord.telefono ??
+            fallbackRecord.phone ??
+            fallbackRecord.telefono ??
+            '';
+
+          const mergedClient: Partial<Client> = {
+            ...fallbackRecord,
+            ...fetchedRecord,
+            phone: normalizedPhone,
+          };
+
+          this.selectedClient = mergedClient as Client;
+          this.applyClientToForm(mergedClient);
+          this.handleCustomerTypeChange('habitual');
+        },
+        error: () => {
+          this.selectedClient = client;
+          this.applyClientToForm(client);
+          this.handleCustomerTypeChange('habitual');
+        },
+      });
+  }
+
+  clearSelectedClient(): void {
+    if (!this.selectedClient) {
+      return;
+    }
+    this.selectedClient = null;
+    this.resetCustomerFields(false);
+    this.handleCustomerTypeChange('habitual');
   }
 
   openProductSelector(): void {
@@ -229,12 +354,14 @@ export class SalesComponent implements OnInit, OnDestroy {
       this.notifications.showError('Los datos de la venta no son válidos.');
       return;
     }
+    const originalCustomer =
+      payload.customer?.type === 'ocasional' ? { ...payload.customer } : undefined;
     const savedSale = await this.persistSale(payload);
     if (!savedSale) {
       return;
     }
     try {
-      this.applyBackendDataToPayload(payload, savedSale);
+      this.applyBackendDataToPayload(payload, savedSale, originalCustomer);
       await this.pdfService.generarFactura(payload);
       this.resetFormState();
       } catch (error) {
@@ -255,12 +382,14 @@ export class SalesComponent implements OnInit, OnDestroy {
       this.notifications.showError('Los datos del presupuesto no son válidos.');
       return;
     }
+    const originalCustomer =
+      payload.customer?.type === 'ocasional' ? { ...payload.customer } : undefined;
     const savedQuote = await this.persistSale(payload);
     if (!savedQuote) {
       return;
     }
     try {
-      this.applyBackendDataToPayload(payload, savedQuote);
+      this.applyBackendDataToPayload(payload, savedQuote, originalCustomer);
       await this.pdfService.generarPresupuesto(payload);
       this.resetFormState();
       } catch (error) {
@@ -281,7 +410,11 @@ export class SalesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private applyBackendDataToPayload(payload: SalePayload, savedSale: SaleResponse): void {
+  private applyBackendDataToPayload(
+    payload: SalePayload,
+    savedSale: SaleResponse,
+    originalOccasionalCustomer?: SaleCustomerPayload,
+  ): void {
     if (savedSale.pointOfSale) {
       payload.pointOfSale = savedSale.pointOfSale;
       this.currentPointOfSale = savedSale.pointOfSale;
@@ -304,26 +437,75 @@ export class SalesComponent implements OnInit, OnDestroy {
       final: this.sanitizeNumber(savedSale.totalFinal),
     };
 
-    if (savedSale.customerId) {
-      payload.customer.id = savedSale.customerId;
+    if (savedSale.clientId !== undefined && savedSale.clientId !== null) {
+      payload.clientId = savedSale.clientId;
+      if (!payload.customer) {
+        payload.customer = {
+          type: 'habitual',
+          withoutClient: false,
+          id: String(savedSale.clientId),
+        };
+      } else {
+        payload.customer.type = 'habitual';
+        payload.customer.withoutClient = false;
+        if (!payload.customer.id) {
+          payload.customer.id = String(savedSale.clientId);
+        }
+      }
     }
-    if (savedSale.customerName) {
-      payload.customer.name = savedSale.customerName;
+
+    if (savedSale.client) {
+      const clientFormData = this.buildClientFormData(savedSale.client);
+      const clientIdNumber = Number(clientFormData.clientId);
+      if (Number.isFinite(clientIdNumber) && clientIdNumber > 0) {
+        payload.clientId = Math.trunc(clientIdNumber);
+      }
+
+      const normalizedClientId = this.normalizeToString(
+        payload.customer?.id ?? clientFormData.clientId,
+      );
+
+      payload.customer = {
+        ...payload.customer,
+        type: 'habitual',
+        withoutClient: false,
+        id: normalizedClientId || undefined,
+        name: clientFormData.customerName || payload.customer?.name,
+        cuit: clientFormData.customerCuit || payload.customer?.cuit,
+        dni: clientFormData.customerDni || payload.customer?.dni,
+        address: clientFormData.customerAddress || payload.customer?.address,
+        phone: clientFormData.customerPhone || payload.customer?.phone,
+      };
     }
-    if (savedSale.customerDocument) {
-      payload.customer.document = savedSale.customerDocument;
+
+    const rawCustomerType =
+      savedSale.customerType ?? payload.customer?.type ?? '';
+    const normalizedCustomerType = this.normalizeToString(rawCustomerType).toLowerCase();
+    const effectiveCustomerType =
+      this.normalizeToString(rawCustomerType) || 'habitual';
+    const isOccasionalCustomer = normalizedCustomerType === 'ocasional';
+
+    if (!payload.customer) {
+      payload.customer = {
+        type: effectiveCustomerType,
+        withoutClient: isOccasionalCustomer,
+      };
+    } else {
+      payload.customer.type = effectiveCustomerType;
+      if (payload.customer.withoutClient === undefined) {
+        payload.customer.withoutClient = isOccasionalCustomer;
+      }
     }
-    if (savedSale.customerCuit) {
-      payload.customer.cuit = savedSale.customerCuit;
-    }
-    if (savedSale.customerDni) {
-      payload.customer.dni = savedSale.customerDni;
-    }
-    if (savedSale.customerAddress) {
-      payload.customer.address = savedSale.customerAddress;
-    }
-    if (savedSale.customerPhone) {
-      payload.customer.phone = savedSale.customerPhone;
+
+    if (originalOccasionalCustomer && isOccasionalCustomer) {
+      payload.customer = {
+        ...originalOccasionalCustomer,
+        type: effectiveCustomerType,
+        withoutClient:
+          originalOccasionalCustomer.withoutClient ??
+          payload.customer.withoutClient ??
+          true,
+      };
     }
 
     if (savedSale.details?.length) {
@@ -369,12 +551,89 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   private handleCustomerTypeChange(type: unknown): void {
-    const isOccasional = type === 'ocasional';
-    const customerNameControl = this.salesForm.get('customerName');
+    const normalizedType = this.normalizeToString(type).toLowerCase();
+    const isHabitual = normalizedType === 'habitual';
 
-    if (isOccasional && !customerNameControl?.value) {
-      customerNameControl?.setValue('', { emitEvent: false });
+    if (isHabitual) {
+      if (!this.selectedClient) {
+        this.resetCustomerFields(false);
+      }
+      this.disableCustomerFields();
+      return;
     }
+
+    this.enableCustomerFields();
+    if (this.selectedClient) {
+      this.selectedClient = null;
+      this.resetCustomerFields(false);
+    }
+  }
+
+  private disableCustomerFields(): void {
+    this.customerFieldNames.forEach((field) => {
+      const control = this.salesForm.get(field);
+      if (control && control.enabled) {
+        control.disable({ emitEvent: false });
+      }
+    });
+  }
+
+  private enableCustomerFields(): void {
+    this.customerFieldNames.forEach((field) => {
+      const control = this.salesForm.get(field);
+      if (control && control.disabled) {
+        control.enable({ emitEvent: false });
+      }
+    });
+  }
+
+  private resetCustomerFields(emitEvent: boolean): void {
+    this.salesForm.patchValue(
+      {
+        clientId: '',
+        customerName: '',
+        customerCuit: '',
+        customerDni: '',
+        customerAddress: '',
+        customerPhone: '',
+      },
+      { emitEvent },
+    );
+  }
+
+  private buildClientFormData(client: Partial<Client>): {
+    clientId: string;
+    customerName: string;
+    customerCuit: string;
+    customerDni: string;
+    customerAddress: string;
+    customerPhone: string;
+  } {
+    const clientId = client?.id != null ? String(client.id) : '';
+    const firstName = this.normalizeToString(client?.nombre);
+    const lastName = this.normalizeToString(client?.apellido);
+    const fullName = [firstName, lastName]
+      .filter((part) => part.length > 0)
+      .join(' ')
+      .trim();
+    const typedClient = client as Partial<Client> & { telefono?: string | null };
+    const rawPhone = typedClient.phone ?? typedClient.telefono ?? '';
+
+    return {
+      clientId,
+      customerName: fullName || firstName || lastName,
+      customerCuit: this.normalizeToString(client?.cuil),
+      customerDni: this.normalizeToString(client?.dni),
+      customerAddress: this.normalizeToString(client?.domicilio),
+      customerPhone: this.normalizeToString(rawPhone),
+    };
+  }
+
+  private applyClientToForm(client: Partial<Client>): void {
+    const formData = this.buildClientFormData(client);
+    this.enableCustomerFields();
+    this.salesForm.patchValue(formData, { emitEvent: false });
+    this.disableCustomerFields();
   }
 
   private updateTotals(): void {
@@ -473,6 +732,17 @@ export class SalesComponent implements OnInit, OnDestroy {
 
     payload.pointOfSale = this.resolvePointOfSale(type, rawValue.invoiceType);
 
+    const clientIdText = this.normalizeToString(rawValue.clientId);
+    const parsedClientId = clientIdText ? Number(clientIdText) : NaN;
+    if (Number.isFinite(parsedClientId) && parsedClientId > 0) {
+      payload.clientId = Math.trunc(parsedClientId);
+      payload.customer.type = 'habitual';
+      payload.customer.withoutClient = false;
+      if (!payload.customer.id) {
+        payload.customer.id = String(payload.clientId);
+      }
+    }
+
     return payload;
   }
 
@@ -501,27 +771,16 @@ export class SalesComponent implements OnInit, OnDestroy {
   }
 
   private buildCustomerPayload(rawValue: SalesFormValue): SaleCustomerPayload {
-    const isOccasional = rawValue.customerType === 'ocasional';
+    const normalizedType = this.normalizeToString(rawValue.customerType).toLowerCase() || 'habitual';
+    const isOccasional = normalizedType === 'ocasional';
 
-    const baseDetails = [
-      rawValue.customerName,
-      rawValue.customerAddress,
-      rawValue.customerPhone,
-    ];
-
-    const hasBaseDetails = baseDetails.every((value) => this.hasContent(value));
+    const name = this.normalizeToString(rawValue.customerName);
+    const address = this.normalizeToString(rawValue.customerAddress);
+    const phone = this.normalizeToString(rawValue.customerPhone);
     const cuit = this.normalizeToString(rawValue.customerCuit);
     const dni = this.normalizeToString(rawValue.customerDni);
     const document = cuit || dni;
     const clientId = this.normalizeToString(rawValue.clientId) || document;
-
-    if (isOccasional && (!hasBaseDetails || !document)) {
-      return {
-        type: rawValue.customerType,
-        name: 'Cliente ocasional',
-        withoutClient: true,
-      };
-    }
 
     const customer: SaleCustomerPayload = {
       type: rawValue.customerType,
@@ -531,12 +790,9 @@ export class SalesComponent implements OnInit, OnDestroy {
     if (clientId) {
       customer.id = clientId;
     }
-
-    const name = this.normalizeToString(rawValue.customerName);
     if (name) {
       customer.name = name;
     }
-
     if (document) {
       customer.document = document;
     }
@@ -546,15 +802,21 @@ export class SalesComponent implements OnInit, OnDestroy {
     if (dni) {
       customer.dni = dni;
     }
-
-    const address = this.normalizeToString(rawValue.customerAddress);
     if (address) {
       customer.address = address;
     }
-
-    const phone = this.normalizeToString(rawValue.customerPhone);
     if (phone) {
       customer.phone = phone;
+    }
+
+    const hasIdentification = Boolean(customer.id || customer.document || customer.cuit || customer.dni);
+    const hasName = Boolean(customer.name);
+
+    if (isOccasional) {
+      customer.withoutClient = !hasIdentification;
+      if (!hasName) {
+        customer.name = 'Cliente ocasional';
+      }
     }
 
     return customer;
@@ -630,9 +892,11 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   private resetFormState(): void {
     this.closeProductSelector();
+    this.closeClientSelector();
     this.items.clear();
     this.lineSummaries = [];
     this.totals = { net: 0, iva: 0, discounts: 0, final: 0 };
+    this.selectedClient = null;
 
     this.salesForm.reset({
       invoiceDate: this.buildTodayValue(),
@@ -648,6 +912,7 @@ export class SalesComponent implements OnInit, OnDestroy {
       customerPhone: '',
     });
 
+    this.handleCustomerTypeChange('habitual');
     this.updateTotals();
     this.table?.renderRows();
     this.fetchNextInvoiceIdentifiers('sale');
@@ -676,6 +941,7 @@ export class SalesComponent implements OnInit, OnDestroy {
     return `${today.getFullYear()}-${month}-${day}`;
   }
 }
+
 
 
 

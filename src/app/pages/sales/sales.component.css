@@ -465,3 +465,37 @@ button {
 .items-table input[type="number"] {
   text-align: right;
 }
+
+
+.client-selector-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+  flex-wrap: wrap;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .grid-compact, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  button {
+    width: 100%;
+  }
+}
+
+.grid-3 .field--payment {
+  max-width: 220px;
+}
+
+.grid-3 .field--payment select {
+  width: 100%;
+}

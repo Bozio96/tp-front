@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product.model';
+import { Client } from '../models/client.model';
 
 export interface SaleItemSummaryPayload {
   net: number;
@@ -48,6 +49,7 @@ export interface SalePayload {
   invoiceNumber?: string;
   invoiceType: string;
   paymentMethod: string;
+  clientId?: number | null;
   customer: SaleCustomerPayload;
   totals: SaleTotalsPayload;
   items: SaleItemPayload[];
@@ -81,19 +83,13 @@ export interface SaleResponse {
   invoiceType: string;
   paymentMethod: string | null;
   customerType: string;
-  customerId: string | null;
-  customerName: string | null;
-  customerDocument: string | null;
-  customerCuit: string | null;
-  customerDni: string | null;
-  customerAddress: string | null;
-  customerPhone: string | null;
+  clientId?: number | null;
+  client?: Partial<Client> | null;
   invoiceDate: string;
   totalNet: number | string;
   totalIva: number | string;
   totalDiscount: number | string;
   totalFinal: number | string;
-  isQuote: boolean;
   type: 'venta' | 'presupuesto';
   createdAt: string;
   updatedAt: string;

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ClientService } from '../../../services/client.service';
 import { Client } from '../../../models/client.model';
 import { CommonModule } from '@angular/common';
@@ -16,14 +16,20 @@ export class ClientDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private clientService: ClientService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.clientService.getClientById(+id).subscribe(client => {
-        this.client = client;
+      this.clientService.getClientById(+id).subscribe({
+        next: (client) => {
+          this.client = client;
+        },
+        error: () => {
+          this.router.navigate(['/not-found']);
+        },
       });
     }
   }
