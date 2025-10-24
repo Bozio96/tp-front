@@ -85,7 +85,7 @@
 
   <div class="grid-compact">
     <label class="field small">
-      <span>CUIT</span>
+      <span>CUIL</span>
       <input type="text" formControlName="customerCuit" inputmode="numeric" pattern="[0-9]*" maxlength="11" />
       <small class="error" *ngIf="salesForm.get('customerCuit')?.touched && salesForm.get('customerCuit')?.hasError('pattern')">
         Ingrese 11 digitos validos
