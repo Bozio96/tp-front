@@ -191,7 +191,7 @@ doc.text(this.resolveVoucherLetter(payload), layout.pageWidth / 2, top + 16, { a
 
   private agregarTablaProductos(doc: jsPDF, payload: any, layout: { contentWidth: number }): void {
     const items = Array.isArray(payload?.items) ? payload.items : [];
-    const tableTop = this.lastTableEndY + 6; // mÃ¡s cerca del cliente
+    const tableTop = this.lastTableEndY + 6; 
 
     if (!items.length) {
       doc.setFontSize(11);

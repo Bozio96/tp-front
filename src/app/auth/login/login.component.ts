@@ -60,7 +60,6 @@ export class LoginComponent {
         },
         error: () => {
           this.loading = false;
-          this.errorMessage = 'Usuario o contraseña incorrectos.';
           this.notifications.showError('Usuario o contraseña incorrectos.');
         }
       });

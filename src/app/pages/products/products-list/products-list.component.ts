@@ -204,7 +204,6 @@ export class ProductsListComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onDeleteClick(productId: number) {
-    //MEJORAS: En lugar de eliminarlo se podría hacer un update con un "eliminado=true" para no eliminarlo de la base de datos
     //Luego traer solo los productos que tengan "eliminado=false"
     this.menuProductId = null;
     const confirmation = window.confirm(

@@ -37,7 +37,7 @@ function valueExistsValidator(allowedValues: DataItem[]): ValidatorFn {
     // Devolvemos un error 'valueNotExists' si no se encuentra.
     return valueExists ? null : { valueNotExists: true };
   };
-} //¿Esto no debería estar con los demás métodos debajo?
+} 
 
 @Component({
   selector: 'app-product-form',
@@ -65,7 +65,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   availableCategories: DataItem[] = [];
   availableSuppliers: DataItem[] = [];
 
-  readonly IVA_RATE = 0.21; //Podría ir en un archivo de constantes
+  readonly IVA_RATE = 0.21; 
   private isCalculating = false;
   isLoading = false;
 
@@ -299,7 +299,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
   onSave(): void {
     if (this.productForm.invalid) {
       this.productForm.markAllAsTouched();
-      this.notifications.showError('Revis� los campos obligatorios antes de guardar.');
+      this.notifications.showError('Revisa los campos obligatorios antes de guardar.');
       return;
     }
 
@@ -318,7 +318,7 @@ export class ProductFormComponent implements OnInit, OnDestroy {
       request$ = this.productService.updateProduct(id, productToSave);
     } else {
       request$ = this.productService.addProduct(productToSave as Product);
-      console.log("🚀 ~ product-form.component.ts:302 ~ ProductFormComponent ~ onSave ~ request$:", request$)
+      
     }
 
     request$.subscribe({

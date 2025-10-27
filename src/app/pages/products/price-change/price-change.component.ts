@@ -245,7 +245,7 @@ export class PriceChangeComponent implements OnInit {
   onAccept(): void {
     const count = this.filteredProducts.length;
     const confirmed = window.confirm(
-      `Â¿EstÃ¡s seguro de que deseas actualizar ${count} producto(s) con los nuevos precios?`
+      `¿Estas seguro de que deseas actualizar ${count} producto(s) con los nuevos precios?`
     );
     if (!confirmed) return;
 
@@ -259,7 +259,7 @@ export class PriceChangeComponent implements OnInit {
 
     this.productService.bulkUpdateProducts(updatedProducts).subscribe(success => {
       if (success) {
-        alert('Precios actualizados con Ã©xito.');
+        alert('Precios actualizados con exito.');
         this.resetForm();
       } else {
         alert('Hubo un error al actualizar los precios.');

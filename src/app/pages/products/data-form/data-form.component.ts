@@ -94,12 +94,12 @@ export class DataFormComponent implements OnInit, OnDestroy {
           this.dataForm.patchValue(item);
           this.dataForm.markAsPristine();
           this.dataForm.markAsUntouched();
-        } else {          this.notifications.showError('No se encontró el registro solicitado.');
+        } else {this.notifications.showError('No se encontró el registro solicitado.');
           this.router.navigate(['/products', this.entityType]);
         }
         this.isLoading = false;
       },
-      (error) => {        this.notifications.showError(this.getErrorMessage(error, 'No se pudo cargar el registro.'));
+      (error) => {this.notifications.showError(this.getErrorMessage(error, 'No se pudo cargar el registro.'));
         this.isLoading = false;
         this.router.navigate(['/products', this.entityType]);
       },
