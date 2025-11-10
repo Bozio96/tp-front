@@ -1,18 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes';
-import { provideHttpClient } from '@angular/common/http';
-import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { appConfig } from './app/app.config';
 
-
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(routes),
-    provideHttpClient(),
-     provideCharts(withDefaultRegisterables())
-  ]
-}).catch(err => {
+bootstrapApplication(AppComponent, appConfig).catch(err => {
   const message = 'No se pudo iniciar la aplicación. Inténtalo nuevamente más tarde.';
   const container = document.createElement('div');
   container.style.position = 'fixed';
@@ -29,3 +19,4 @@ bootstrapApplication(AppComponent, {
   document.body.appendChild(container);
   throw err;
 });
+
