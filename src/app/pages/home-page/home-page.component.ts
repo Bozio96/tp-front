@@ -54,18 +54,21 @@ export class HomePageComponent implements OnInit {
     this.dashboardService.getVentasMensuales().subscribe((data) => {
       this.ventasMensualesLabels = data.map((d: any) => this.nombreMes(d.mes));
       this.ventasMensualesData = data.map((d: any) => d.total_ventas);
+      this.updateBarChartData();
     });
 
     // 🔹 Distribución ventas vs presupuestos
     this.dashboardService.getDistribucion().subscribe((data) => {
       this.distribucionLabels = data.map((d: any) => d.type);
       this.distribucionData = data.map((d: any) => d.cantidad);
+      this.updatePieChartData();
     });
 
     // 🔹 Ventas diarias (últimos 30 días)
     this.dashboardService.getVentasDiarias().subscribe((data) => {
       this.ventasDiariasLabels = data.map((d: any) => this.formatearFecha(d.fecha));
       this.ventasDiariasData = data.map((d: any) => d.total_dia);
+      this.updateLineChartData();
     });
   }
 
@@ -79,16 +82,16 @@ export class HomePageComponent implements OnInit {
   }
 
   private formatearFecha(fechaIso: string): string {
+    if (typeof fechaIso !== 'string') {
+      return fechaIso as unknown as string;
+    }
+
     const fecha = new Date(fechaIso);
     if (Number.isNaN(fecha.getTime())) {
       return fechaIso;
     }
 
-    return new Intl.DateTimeFormat('es-AR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(fecha);
+    return fecha.toISOString().split('T')[0];
   }
 
   // === Configuración de gráficos ===
@@ -141,4 +144,43 @@ export class HomePageComponent implements OnInit {
       y: { beginAtZero: true },
     },
   };
+
+  private updateBarChartData(): void {
+    const [dataset] = this.barChartData.datasets;
+    this.barChartData = {
+      labels: [...this.ventasMensualesLabels],
+      datasets: [
+        {
+          ...dataset,
+          data: [...this.ventasMensualesData],
+        },
+      ],
+    };
+  }
+
+  private updatePieChartData(): void {
+    const [dataset] = this.pieChartData.datasets;
+    this.pieChartData = {
+      labels: [...this.distribucionLabels],
+      datasets: [
+        {
+          ...dataset,
+          data: [...this.distribucionData],
+        },
+      ],
+    };
+  }
+
+  private updateLineChartData(): void {
+    const [dataset] = this.lineChartData.datasets;
+    this.lineChartData = {
+      labels: [...this.ventasDiariasLabels],
+      datasets: [
+        {
+          ...dataset,
+          data: [...this.ventasDiariasData],
+        },
+      ],
+    };
+  }
 }
