@@ -180,20 +180,7 @@ export class SalesComponent implements OnInit, OnDestroy {
         },
       });
 
-    this.productService
-      .getAllProducts()
-      .pipe(take(1))
-      .subscribe({
-        next: (products) => {
-          this.products = products ?? [];
-          this.filteredProducts = [...this.products];
-        },
-        error: () => {
-          this.notifications.showError('No se pudieron cargar los productos.');
-          this.products = [];
-          this.filteredProducts = [];
-        },
-      });
+    this.loadProducts();
 
     this.fetchNextInvoiceIdentifiers('sale');
   }
@@ -347,6 +334,11 @@ export class SalesComponent implements OnInit, OnDestroy {
       return;
     }
     this.updateTotals();
+    const stockIssues = this.getStockIssues();
+    if (stockIssues.length) {
+      this.notifications.showError(`Stock insuficiente: ${stockIssues.join('; ')}`);
+      return;
+    }
     let payload: SalePayload;
     try {
       payload = this.buildPayload('sale');
@@ -366,6 +358,8 @@ export class SalesComponent implements OnInit, OnDestroy {
       this.resetFormState();
       } catch (error) {
         this.notifications.showError('No se pudo generar la factura.');
+      } finally {
+        this.loadProducts();
       }
   }
 
@@ -405,9 +399,25 @@ export class SalesComponent implements OnInit, OnDestroy {
     try {
       return await firstValueFrom(this.salesApi.createSale(payload));
     } catch (error) {
-      this.notifications.showError('No se pudo registrar la venta.');
       return null;
     }
+  }
+
+  private loadProducts(): void {
+    this.productService
+      .getAllProducts()
+      .pipe(take(1))
+      .subscribe({
+        next: (products) => {
+          this.products = products ?? [];
+          this.filteredProducts = [...this.products];
+        },
+        error: () => {
+          this.notifications.showError('No se pudieron cargar los productos.');
+          this.products = [];
+          this.filteredProducts = [];
+        },
+      });
   }
 
   private applyBackendDataToPayload(
@@ -536,6 +546,27 @@ export class SalesComponent implements OnInit, OnDestroy {
 
   getProductStock(product: Product): number {
     return product.stock ?? 0;
+  }
+
+  private getStockIssues(): string[] {
+    const issues: string[] = [];
+
+    this.items.controls.forEach((group, index) => {
+      const productId = this.sanitizeNumber(group.get('productId')?.value, 0);
+      const quantity = this.sanitizeNumber(group.get('quantity')?.value, 0);
+      const product = this.products.find((p) => p.id === productId);
+      const availableStock = product?.stock ?? 0;
+
+      if (quantity > availableStock) {
+        const name =
+          this.normalizeToString(product?.name) ||
+          this.normalizeToString(group.get('description')?.value) ||
+          `Linea ${index + 1}`;
+        issues.push(`${name} (disp: ${availableStock}, pide: ${quantity})`);
+      }
+    });
+
+    return issues;
   }
 
   private createItemGroup(product?: Product): FormGroup {

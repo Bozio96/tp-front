@@ -8,10 +8,22 @@
         <div class="form-group">
           <label for="nombre">Nombre</label>
           <input id="nombre" type="text" formControlName="nombre" />
+          <div
+            class="error-message"
+            *ngIf="clientForm.get('nombre')?.touched && clientForm.get('nombre')?.hasError('required')"
+          >
+            Campo obligatorio.
+          </div>
         </div>
         <div class="form-group">
           <label for="apellido">Apellido</label>
           <input id="apellido" type="text" formControlName="apellido" />
+          <div
+            class="error-message"
+            *ngIf="clientForm.get('apellido')?.touched && clientForm.get('apellido')?.hasError('required')"
+          >
+            Campo obligatorio.
+          </div>
         </div>
       </div>
       <div class="form-group-inline">
@@ -31,6 +43,12 @@
         <div class="form-group">
           <label for="phone">Telefono</label>
           <input id="phone" type="text" formControlName="phone" />
+          <div
+            class="error-message"
+            *ngIf="clientForm.get('phone')?.touched && clientForm.get('phone')?.hasError('required')"
+          >
+            Campo obligatorio.
+          </div>
         </div>
       </div>
       <div class="form-group">
@@ -58,6 +76,12 @@
       <div class="form-group">
         <label for="domicilio">Domicilio</label>
         <input id="domicilio" type="text" formControlName="domicilio" />
+        <div
+          class="error-message"
+          *ngIf="clientForm.get('domicilio')?.touched && clientForm.get('domicilio')?.hasError('required')"
+        >
+          Campo obligatorio.
+        </div>
       </div>
       <!-- <div class="form-group">
         <label for="foto">Foto (URL)</label>
@@ -66,7 +90,7 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" class="save-btn" [disabled]="clientForm.invalid">
+      <button type="submit" class="save-btn">
         {{ isEditing ? "Guardar Cambios" : "Guardar" }}
       </button>
       <button type="button" class="cancel-btn" (click)="onCancel()">

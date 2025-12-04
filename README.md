@@ -95,8 +95,10 @@ Siempre que cambies la URL base recuerda reiniciar `ng serve` para que Angular r
 - Errores de TypeScript al compilar: revisa que estes usando Node 20+ y que no haya quedado un `npm install` a medias. Borra `node_modules` y repite la instalacion si es necesario.
 - Fallo al generar PDFs: asegurate de que el navegador permita ventanas emergentes/descargas automaticas y que los datos obligatorios del formulario de venta esten completos (se valida antes de llamar a `PdfService`).
 
-## Video demostrativo (proximamente)
-> Espacio reservado para embeber el video de demo del flujo principal (dashboard -> gestion -> venta).
+## Video demostrativo
+[![Ver demo](https://drive.google.com/file/d/1bQsOg56wCQs_tKJXGqMXTxPQv_uBwi6B/view?usp=sharing)](https://drive.google.com/file/d/140KoxT6BpSDJWF9XEPUWy1dd2ZCyS7On/view?usp=sharing)
+
+
 
 ## Recursos utiles
 - [Documentacion Angular](https://angular.dev/)

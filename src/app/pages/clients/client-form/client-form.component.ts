@@ -94,6 +94,12 @@ export class ClientFormComponent implements OnInit {
   onSave(): void {
     if (this.clientForm.invalid) {
       this.clientForm.markAllAsTouched();
+      const missingFields = this.getMissingFields();
+      if (missingFields.length) {
+        this.notifications.showError(
+          `Completa los siguientes campos: ${missingFields.join(', ')}.`
+        );
+      }
       return;
     }
 
@@ -152,6 +158,36 @@ export class ClientFormComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/clients']);
+  }
+
+  private getMissingFields(): string[] {
+    const missing: string[] = [];
+    const controls = this.clientForm.controls;
+
+    if (!this.hasContent(controls['nombre']?.value)) {
+      missing.push('Nombre');
+    }
+    if (!this.hasContent(controls['apellido']?.value)) {
+      missing.push('Apellido');
+    }
+    if (!this.hasContent(controls['phone']?.value)) {
+      missing.push('Telefono');
+    }
+    if (!this.hasContent(controls['domicilio']?.value)) {
+      missing.push('Domicilio');
+    }
+
+    const dni = this.normalizeText(controls['dni']?.value);
+    const cuil = this.normalizeText(controls['cuil']?.value);
+    if (!dni && !cuil) {
+      missing.push('DNI o CUIL');
+    }
+
+    return missing;
+  }
+
+  private hasContent(value: unknown): boolean {
+    return this.normalizeText(value).length > 0;
   }
 
   private requireDniOrCuil(): ValidatorFn {

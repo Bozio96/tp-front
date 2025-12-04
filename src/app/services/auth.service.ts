@@ -22,12 +22,11 @@ interface JwtPayload {
 @Injectable({
   providedIn: 'root',
 })
-
 export class AuthService {
   private apiUrl = 'http://localhost:3000'; //Url backend
   private currentUserSubject = new BehaviorSubject<User | null>(null); //Almacena el usuario, es como un estado
   public currentUser$ = this.currentUserSubject.asObservable(); //Cualquiera puede ver esto(suscribirse), PERO NO EDITARLO
-  //El $ al final es por convención que es solo lectura
+  //El $ al final es por convencion que es solo lectura
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
@@ -42,10 +41,8 @@ export class AuthService {
   }
 
   login(credentials: {username: string, password: string}): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe( 
-      //El pipe permite encadenar operadores (tap en este caso) que emite el Observable 
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, credentials).pipe(
       tap(response => {
-      //El tap permite realizar efectos secundarios (useEffect en React)
         localStorage.setItem('access_token', response.access_token);
         const decodedToken = jwtDecode<JwtPayload>(response.access_token);
         const user: User = {
@@ -61,11 +58,8 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
-    this.currentUserSubject.next(null);
-    this.isLoggedInSubject.next(false);
+    this.clearSession(true);
     console.log('Logout exitoso.');
-    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
@@ -73,7 +67,18 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.getToken(); //Comprueba si existe un token o no 
+    const token = this.getToken();
+    if (!token) {
+      this.isLoggedInSubject.next(false);
+      return false;
+    }
+
+    if (this.isTokenExpired(token)) {
+      this.clearSession();
+      return false;
+    }
+
+    return true;
   }
 
   getCurrentUser(): User | null {
@@ -89,23 +94,52 @@ export class AuthService {
     return ['admin', 'user'];
   }
 
-  private loadUserFromToken() {
+  private loadUserFromToken(): void {
     const token = this.getToken();
-    if (token) {
-      try {
-        const decodedToken = jwtDecode<JwtPayload>(token);
-        const user: User = {
-          id: decodedToken.sub,
-          username: decodedToken.username,
-          role: decodedToken.role,
-        };
-        this.currentUserSubject.next(user);
-        this.isLoggedInSubject.next(true);
-        console.log('Usuario cargado desde el token.');
-      } catch (error) {
-        this.notifications.showError('No se pudo validar tu sesión, por favor vuelve a iniciar sesión.');
-        this.logout();
-      }
+    if (!token) {
+      return;
+    }
+
+    const decodedToken = this.decodeToken(token);
+    if (!decodedToken || this.isTokenExpired(token, decodedToken)) {
+      this.notifications.showError('No se pudo validar tu sesion, por favor vuelve a iniciar sesion.');
+      this.clearSession();
+      return;
+    }
+
+    const user: User = {
+      id: decodedToken.sub,
+      username: decodedToken.username,
+      role: decodedToken.role,
+    };
+    this.currentUserSubject.next(user);
+    this.isLoggedInSubject.next(true);
+    console.log('Usuario cargado desde el token.');
+  }
+
+  private decodeToken(token: string): JwtPayload | null {
+    try {
+      return jwtDecode<JwtPayload>(token);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private isTokenExpired(token: string, decoded?: JwtPayload | null): boolean {
+    const payload = decoded ?? this.decodeToken(token);
+    if (!payload?.exp) {
+      return true;
+    }
+    const nowInSeconds = Math.floor(Date.now() / 1000);
+    return payload.exp < nowInSeconds;
+  }
+
+  private clearSession(redirectToLogin = false): void {
+    localStorage.removeItem('access_token');
+    this.currentUserSubject.next(null);
+    this.isLoggedInSubject.next(false);
+    if (redirectToLogin) {
+      this.router.navigate(['/login']);
     }
   }
 }
