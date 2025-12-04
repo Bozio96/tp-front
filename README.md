@@ -96,7 +96,7 @@ Siempre que cambies la URL base recuerda reiniciar `ng serve` para que Angular r
 - Fallo al generar PDFs: asegurate de que el navegador permita ventanas emergentes/descargas automaticas y que los datos obligatorios del formulario de venta esten completos (se valida antes de llamar a `PdfService`).
 
 ## Video demostrativo
-[![Ver demo](https://drive.google.com/file/d/1bQsOg56wCQs_tKJXGqMXTxPQv_uBwi6B/view?usp=sharing)](https://drive.google.com/file/d/140KoxT6BpSDJWF9XEPUWy1dd2ZCyS7On/view?usp=sharing)
+[![Ver demo](https://res.cloudinary.com/die3c5c18/image/upload/v1764876084/miniatura_owg6ep.png)](https://drive.google.com/file/d/140KoxT6BpSDJWF9XEPUWy1dd2ZCyS7On/view?usp=sharing)
 
 
 
