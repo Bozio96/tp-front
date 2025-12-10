@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 import { Client } from '../models/client.model';
+import { API_URL } from '../config/api.config';
 
 export interface SaleItemSummaryPayload {
   net: number;
@@ -104,7 +105,7 @@ export interface NextInvoiceIdentifiersResponse {
 
 @Injectable({ providedIn: 'root' })
 export class SalesApiService {
-  private readonly baseUrl = 'http://localhost:3000/api/sales';
+  private readonly baseUrl = `${API_URL}/sales`;
 
   constructor(private readonly http: HttpClient) {}
 

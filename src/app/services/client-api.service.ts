@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs'; //Mejor capturar de otra forma el error en vez de un of
 import { catchError } from 'rxjs/operators';
 import { Client } from '../models/client.model';
+import { API_URL } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ClientApiService {
-  private readonly baseUrl = 'http://localhost:3000/api';
+  private readonly baseUrl = API_URL;
   private readonly clientsUrl = `${this.baseUrl}/clients`;
 
   constructor(private http: HttpClient) {}

@@ -4,10 +4,11 @@ import { Product } from '../models/product.model';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BulkUpdateResponse, DataItem, EntityType } from './product-types';
+import { API_URL } from '../config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class ProductApiService {
-  private readonly baseUrl = 'http://localhost:3000/api'; // Esto mejor en un archivo .env
+  private readonly baseUrl = API_URL;
   private readonly productsUrl = `${this.baseUrl}/products`;
 
   constructor(private http: HttpClient) {}

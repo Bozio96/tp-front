@@ -36,20 +36,34 @@
             "src/custom-theme.scss",
             "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+            "canvg",
+            "raf",
+            "rgbcolor",
+            "html2canvas",
+            "jspdf",
+            "core-js"
+            ]
         },
         "configurations": {
             "production": {
+            "fileReplacements": [
+                {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.production.ts"
+                }
+            ],
             "budgets": [
                 {
                 "type": "initial",
-                "maximumWarning": "500kB",
-                "maximumError": "1MB"
+                "maximumWarning": "2MB",
+                "maximumError": "2.5MB"
                 },
                 {
                 "type": "anyComponentStyle",
-                "maximumWarning": "4kB",
-                "maximumError": "8kB"
+                "maximumWarning": "8kB",
+                "maximumError": "12kB"
                 }
             ],
             "outputHashing": "all"

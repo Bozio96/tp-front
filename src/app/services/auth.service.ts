@@ -6,6 +6,7 @@ import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
 import { User } from '../models/user.model';
 import { NotificationService } from './notification.service';
+import { API_BASE_URL } from '../config/api.config';
 
 export interface LoginResponse {
   access_token: string;
@@ -23,7 +24,7 @@ interface JwtPayload {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000'; //Url backend
+  private apiUrl = API_BASE_URL; // Url backend
   private currentUserSubject = new BehaviorSubject<User | null>(null); //Almacena el usuario, es como un estado
   public currentUser$ = this.currentUserSubject.asObservable(); //Cualquiera puede ver esto(suscribirse), PERO NO EDITARLO
   //El $ al final es por convencion que es solo lectura
