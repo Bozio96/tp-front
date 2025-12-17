@@ -2,11 +2,15 @@ import { CanActivateFn, Router, ActivatedRouteSnapshot } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
+export enum Role {
+  Admin = 'admin',
+  User = 'user',
+}
 export const roleGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const requiredRole = route.data['role'] as 'admin' | 'user';
+  const requiredRole = route.data['role'] as Role;
   const currentUser = authService.getCurrentUser();
 
   // Verificamos si el usuario existe y si su rol es el requerido

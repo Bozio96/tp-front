@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import {CommonModule} from '@angular/common'
-import { Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import {SidebarComponent} from './components/sidebar/sidebar.component'
 
 @Component({
@@ -19,9 +19,9 @@ export class AppComponent implements OnInit {
   // Inicializamos el estado del sidebar como NO COLAPSADO (es decir visible)
   isSidebarCollapsed: boolean = false; 
 
-  constructor(public router: Router) {
-    this.router.events.subscribe(event => {}); //Ver que significa esto
-  }
+/*   constructor(public router: Router) {
+    this.router.events.subscribe(event => {});
+  } */
 
   ngOnInit() {
     // Configura el estado inicial al cargar la página

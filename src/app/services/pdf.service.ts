@@ -376,10 +376,6 @@ doc.text(this.resolveVoucherLetter(payload), layout.pageWidth / 2, top + 16, { a
     return '-';
   }
 
-  private capitalize(value: string): string {
-    return value ? value.charAt(0).toUpperCase() + value.slice(1).toLowerCase() : value;
-  }
-
   private formatFileTimestamp(value: unknown): string {
     const source = typeof value === 'string' && value ? value : new Date().toISOString();
     return source.replace(/[:.]/g, '-');
@@ -457,17 +453,5 @@ private mapPaymentMethod(method: string): string {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 

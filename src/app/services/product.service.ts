@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ProductApiService } from './product-api.service';
 import { Product } from '../models/product.model';
@@ -29,9 +29,7 @@ export class ProductService {
   }
 
   getProductById(id: number): Observable<Product> {
-    return this.api.getProductById(id).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.getProductById(id);
   }
 
   getProductCount(): Observable<number> {
@@ -39,22 +37,18 @@ export class ProductService {
   }
 
   addProduct(newProduct: Product): Observable<Product> {
-    return this.api.createProduct(newProduct).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.createProduct(newProduct);
   }
 
   updateProduct(id: number, updates: Partial<Product>): Observable<Product> {
     return this.api.updateProduct(id, updates).pipe(
-      map(product => product),
-      catchError((error) => throwError(() => error))
+      map(product => product)
     );
   }
 
   deleteProduct(id: number): Observable<boolean> {
     return this.api.deleteProduct(id).pipe(
-      map(() => true),
-      catchError((error) => throwError(() => error))
+      map(() => true)
     );
   }
 
@@ -77,8 +71,7 @@ export class ProductService {
     }
 
     return this.api.bulkUpdateProducts(payload).pipe(
-      map(response => (response as { success: boolean }).success),
-      catchError((error) => throwError(() => error))
+      map(response => (response as { success: boolean }).success)
     );
   }
 }

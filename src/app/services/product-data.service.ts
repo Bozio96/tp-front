@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import { DataItem, EntityType } from './product-types';
@@ -62,21 +62,17 @@ export class ProductDataService {
 
   getItemById(type: EntityType, id: number): Observable<DataItem | null> {
     return this.api.getItemById(type, id).pipe(
-      map((item) => item),
-      catchError((error) => throwError(() => error))
+      map((item) => item)
     );
   }
 
   saveItem(type: EntityType, item: DataItem): Observable<DataItem> {
-    return this.api.saveItem(type, item).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.saveItem(type, item);
   }
 
   deleteItem(type: EntityType, id: number): Observable<boolean> {
     return this.api.deleteItem(type, id).pipe(
-      map(() => true),
-      catchError((error) => throwError(() => error))
+      map(() => true)
     );
   }
 }

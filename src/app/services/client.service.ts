@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ClientApiService } from './client-api.service';
 import { Client } from '../models/client.model';
@@ -33,9 +33,7 @@ export class ClientService {
   }
 
   getClientById(id: number): Observable<Client> {
-    return this.api.getClientById(id).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.getClientById(id);
   }
 
   getClientCount(): Observable<number> {
@@ -45,21 +43,16 @@ export class ClientService {
   }
 
   addClient(newClient: Omit<Client, 'id'>): Observable<Client> {
-    return this.api.createClient(newClient).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.createClient(newClient);
   }
 
   updateClient(id: number, updates: Partial<Client>): Observable<Client> {
-    return this.api.updateClient(id, updates).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.api.updateClient(id, updates);
   }
 
   deleteClient(id: number): Observable<boolean> {
     return this.api.deleteClient(id).pipe(
-      map(() => true),
-      catchError((error) => throwError(() => error))
+      map(() => true)
     );
   }
 }

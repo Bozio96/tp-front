@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../models/product.model';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { BulkUpdateResponse, DataItem, EntityType } from './product-types';
 import { API_URL } from '../config/api.config';
@@ -20,27 +20,19 @@ export class ProductApiService {
   }
 
   getProductById(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.productsUrl}/${id}`).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.get<Product>(`${this.productsUrl}/${id}`);
   }
 
   createProduct(product: Product): Observable<Product> {
-    return this.http.post<Product>(this.productsUrl, product).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.post<Product>(this.productsUrl, product);
   }
 
   updateProduct(id: number, payload: Partial<Product>): Observable<Product> {
-    return this.http.put<Product>(`${this.productsUrl}/${id}`, payload).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.put<Product>(`${this.productsUrl}/${id}`, payload);
   }
 
   deleteProduct(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.productsUrl}/${id}`).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.delete<void>(`${this.productsUrl}/${id}`);
   }
 
   bulkUpdateProducts(products: any[]): Observable<BulkUpdateResponse> {
@@ -74,9 +66,7 @@ export class ProductApiService {
   }
 
   getItemById(type: EntityType, id: number): Observable<DataItem> {
-    return this.http.get<DataItem>(`${this.baseUrl}/${type}/${id}`).pipe(
-      catchError((error) => throwError(() => error))
-    );
+    return this.http.get<DataItem>(`${this.baseUrl}/${type}/${id}`);
   }
 
   saveItem(type: EntityType, item: DataItem): Observable<DataItem> {
@@ -94,4 +84,3 @@ export class ProductApiService {
     return this.http.delete<void>(`${this.baseUrl}/${type}/${id}`);
   }
 }
-

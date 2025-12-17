@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Product } from '../models/product.model';
 import { Client } from '../models/client.model';
 import { API_URL } from '../config/api.config';
@@ -111,21 +110,15 @@ export class SalesApiService {
 
   createSale(payload: SalePayload): Observable<SaleResponse> {
     const { createdAt, pointOfSale, ...body } = payload;
-    return this.http.post<SaleResponse>(this.baseUrl, body as SaleCreateRequest).pipe(
-      catchError((error) => throwError(() => error)),
-    );
+    return this.http.post<SaleResponse>(this.baseUrl, body as SaleCreateRequest);
   }
 
   getSales(): Observable<SaleResponse[]> {
-    return this.http.get<SaleResponse[]>(this.baseUrl).pipe(
-      catchError((error) => throwError(() => error)),
-    );
+    return this.http.get<SaleResponse[]>(this.baseUrl);
   }
 
   getSaleById(id: number): Observable<SaleResponse> {
-    return this.http.get<SaleResponse>(`${this.baseUrl}/${id}`).pipe(
-      catchError((error) => throwError(() => error)),
-    );
+    return this.http.get<SaleResponse>(`${this.baseUrl}/${id}`);
   }
 
   getNextInvoiceIdentifiers(
@@ -140,9 +133,6 @@ export class SalesApiService {
     return this.http
       .get<NextInvoiceIdentifiersResponse>(`${this.baseUrl}/next-number`, {
         params,
-      })
-      .pipe(
-        catchError((error) => throwError(() => error)),
-      );
+      });
   }
 }
